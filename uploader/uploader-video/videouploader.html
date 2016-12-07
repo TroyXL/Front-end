@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>视频上传</title>
+    <link rel="stylesheet" href="videoUploader.css">
+</head>
+<body>
+
+<div class="video-wrapper">
+
+</div>
+
+<div class="video-picker">
+    请选择需要上传的视频
+    <input type="file" name="file" accept="video/*" id="fileupload">
+</div>
+
+
+</body>
+
+<script src="js/jquery-1.8.3.min.js"></script>
+<script src="js/jquery.iframe-transport.js"></script>
+<script src="js/jquery.ui.widget.js"></script>
+<script src="js/jquery.fileupload.js"></script>
+
+<script src="js/videoUploader.js"></script>
+
+<script>
+    Video.setOptions = {
+        url: 'http://199.168.3.238:8081/aliyun/multipartUpload',
+        videoPicker: '#fileupload',
+        accept: ['video/mp4', 'video/webm', 'video/ogg', 'video/m3u8']
+    };
+
+    Video.setCurrentVideo([
+        {
+            name: 'test.mp4',
+            src: 'test'
+        },{
+            name:'hahaha.avi',
+            src:'hahaha'
+        }
+    ]);
+    Video.upload();
+</script>
+
+
+</html>

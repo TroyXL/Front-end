@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+	<title>uploader</title>
+</head>
+<link rel="stylesheet" href="uploader/uploader.css">
+<link rel="stylesheet" href="uploader/uploader-cropper/cropper.min.css">
+<body>
+
+<div class="uploader-wrapper" style="margin-top:20px;margin-left:10px;">
+
+  <div class="filePicker js-filePicker">
+    <input type="file" accept="image/jpg,image/png,image/jpeg" name="file">
+  </div>
+</div>
+
+
+
+<script src="uploader/jquery-1.8.3.min.js"></script>
+<script src="uploader/uploader-cropper/jquery.ui.widget.js"></script>
+<script src="uploader/uploader-cropper/jquery.fileupload.js"></script>
+<script src="uploader/uploader-cropper/cropper.min.js"></script>
+<script src="uploader/uploader-cropper/uploader-cropper.js"></script>
+<script>
+    $(function () {
+
+      // 配置上传图片参数
+      Uploader.setOptions = function() {
+          return {
+            token: 'OkQCJ_WmM1mFSFSbfbG_Ov-NnHqTNdnV3AZ3kKBX:OfLsOTom207ILA6Y1vUc_-jrFqk=:eyJzY29wZSI6InRlc3RpbWFnZSIsImRlYWRsaW5lIjoxNDc0OTcxMTg0fQ==',
+            domain: 'http://odu8symay.bkt.clouddn.com',
+            URL: 'http://upload.qiniu.com/',
+            imagePicker: '.filePicker',
+            thumbWrapper: '.img-box',
+            countLimit: 5,
+            deleteBtn: '.delete',
+            maxWidth: 640,
+            aspectRatio: 1,
+            afterDefaultSuccess: function(file, result) {
+              alert('上传成功 ' + result);
+            }
+          }
+      };
+
+      // 已存在图片 直接展示
+      Uploader.setCurrentImage([
+            'http://gitlab.htd.cn/assets/logo-ca207549507c811d027110077cf86e90.svg',
+            '',
+            'http://gitlab.htd.cn/assets/logo-ca207549507c811d027110077cf86e90.svg',
+            'http://gitlab.htd.cn/assets/logo-ca207549507c811d027110077cf86e90.svg',
+            'http://gitlab.htd.cn/assets/logo-ca207549507c811d027110077cf86e90.svg',
+            'http://gitlab.htd.cn/assets/logo-ca207549507c811d027110077cf86e90.svg',
+            'http://gitlab.htd.cn/assets/logo-ca207549507c811d027110077cf86e90.svg'
+            ]);
+
+      // 上传图片
+      Uploader.upload();
+
+
+    })
+
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+

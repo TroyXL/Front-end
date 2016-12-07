@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <title>图片压缩</title>
+
+    <!-- css -->
+
+</head>
+<body>
+
+<h3>图片尺寸压缩</h3>
+<p>需启用本地服务，使用chrome浏览器</p>
+<p>默认图片最大宽度640px，可同时压缩多张，输入框中自定义最大宽度，图片宽度小于最大宽度则不压缩</p>
+
+<br>
+
+<input type="number" name="maxWidth" placeholder="默认最大宽度640"> <br><br><br>	
+
+<input type="file" name="file" accept="image/png" multiple=""> <br><br><br>	
+
+<button>压缩并下载</button>
+
+<p id="compress-tip"></p>
+
+
+
+</body>
+
+<!-- script -->
+<script src="jquery-1.8.3.min.js"></script>
+<script src="zip.js"></script>
+<script src="compress.js"></script>
+
+</html>
