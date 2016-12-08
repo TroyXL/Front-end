@@ -8,6 +8,7 @@ var Main = function () {
         dotsNum = 100,
         maxDotsNum = 200,
         overNum = 0,
+        dotsDistance = 250;
         canvas = document.getElementById('canvas'),
         ctxC = canvas.getContext('2d'),
         dotsC = document.getElementById('dots'),
@@ -79,11 +80,11 @@ var Main = function () {
                 var tx = dotsArr[i].x - dotsArr[j].x,
                     ty = dotsArr[i].y - dotsArr[j].y,
                     s = Math.sqrt(Math.pow(tx, 2) + Math.pow(ty, 2));
-                if (s < 200) {
+                if (s < dotsDistance) {
                     ctxD.beginPath();
                     ctxD.moveTo(dotsArr[i].x, dotsArr[i].y);
                     ctxD.lineTo(dotsArr[j].x, dotsArr[j].y);
-                    ctxD.strokeStyle = 'rgba(255,255,255,'+(200-s)/200+')';
+                    ctxD.strokeStyle = 'rgba(255,255,255,'+(dotsDistance-s)/dotsDistance+')';
                     ctxD.strokeWidth = 1;
                     ctxD.stroke();
                     ctxD.closePath();
