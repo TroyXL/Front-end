@@ -73,9 +73,7 @@
 
     window.addEventListener('onorientationchange' in window?'orientationchange':'resize', function () {
         
-    }, false) {
-        detectOrientatioin();
-    }   //切换横竖屏
+    }, false)
 
     function detectOrientatioin(){
         if(window.orientation==180 || window.orientation==0){
