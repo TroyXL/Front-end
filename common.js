@@ -9,14 +9,17 @@
     window.troy = {};
 
     /**
-     * 判断设备种类
+     * 判断是否移动设备并返回设备种类
      */
     troy.deviceType = function () {
         var ua = navigator.userAgent;
         var agent = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
-        for(var i=0; i<len,len = agent.length; i++){
-            if(ua.indexOf(agent[i])>0){
-                break;
+        for (var i = 0; len = agent.length, i < len; i ++) {
+            if (ua.indexOf(agent[i]) > 0) {
+                return agent[i];
+            } else {
+                console.log('not mobile device');
+                return false;
             }
         }
     };
@@ -35,7 +38,7 @@
 
     /**
      * 缩放屏幕适配   如果屏幕宽高获取不准确 使用setTimeout延时300 确保获取准确
-     * @param el {string} 需要缩放的节点(opacity:0)
+     * @param el {string} 需要缩放的节点选择器(opacity:0)
      * @param width {number} 设计稿宽
      * @param height {number} 设计稿高
      */
@@ -44,10 +47,12 @@
             winW = document.getElement.clientWidth,
             winH = document.getElement.clientHeight,
             winRatio = winW/winH,
-            scale, $dom = $(el);
+            scale, $dom = document.querySelectorAll(el);
 
         if (ratio === winRatio) {
-            $dom.css({'opacity': 1});
+            for (var i = 0; i < $dom.length; i ++) {
+                $dom[i].style.opacity = 1;
+            }
             return;
         }
 
@@ -57,7 +62,9 @@
             scale = (winW/width).toString().substring(0, 6);
         }
         var cssText = '-webkit-transform: scale('+scale+');-webkit-transform-origin: top; opacity:1;';
-        $dom.attr('style', cssText);
+        for (var i = 0; i < $dom.length; i ++) {
+            $dom[i].setAttribute('style', cssText);
+        }
     };
 
     /**
@@ -97,12 +104,12 @@
 
         if (isPureNumber) {
             for (var i = 0; i < length; i ++) {
-                index = Math.round(Math.random()*10);
+                index = Math.round(Math.random()*9);
                 string = string + arr1[index];
             }
         } else {
             for (var i = 0; i < length; i ++) {
-                index = Math.round(Math.random()*62);
+                index = Math.round(Math.random()*61);
                 string = string + arr2[index];
             }
         }
@@ -118,7 +125,7 @@
      * 随机十六进制色值生成器
      */
     troy.randomColor = function () {
-        var arrHex=["0","2","3","4","5","6","7","8","9","a","b","c","d"],
+        var arrHex=["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"],
             strHex="#",
             index;
         for(var i=0;i < 6; i++){
