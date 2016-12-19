@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
     <title>index</title>
     <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="picsviewer.css">
 </head>
 
 <style>
@@ -100,9 +101,35 @@
 </div>
 
 <div class="img-wrapper">
-    <span>
 
-    </span>
+    <!--预览图包裹层-->
+    <div class="picsman-viewer-wrapper">
+        <!--预览图主体-->
+        <div class="picsman-viewer">
+
+            <!--装框 角  宽高相等fw-->
+            <div class="frame-corner frame-corner-top-left"></div>
+            <div class="frame-corner frame-corner-top-right"></div>
+            <div class="frame-corner frame-corner-bottom-left"></div>
+            <div class="frame-corner frame-corner-bottom-left"></div>
+
+            <!--装框 边  top/bottom 高fw.宽100-2fw  left、right 宽fw.高100-2fw-->
+            <div class="frame-border frame-border-top"></div>
+            <div class="frame-border frame-border-bottom"></div>
+            <div class="frame-border frame-border-left"></div>
+            <div class="frame-border frame-border-right"></div>
+
+            <!--卡纸  宽高 100%-2fw-->
+            <div class="cardboard">
+
+                <!--图片  宽高  卡纸尺寸-边距cw-->
+                <img src="" alt="" class="picsman">
+                
+            </div>
+
+        </div>
+    </div>
+
 </div>
 
 
