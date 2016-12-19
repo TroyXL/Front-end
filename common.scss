@@ -1,0 +1,265 @@
+/**
+ * 颜色
+ */
+
+//background
+.g-black-a5{background-color: rgba(0,0,0,.5);}
+.g-black-a6{background-color: rgba(0,0,0,.6);}
+.g-black-a7{background-color: rgba(0,0,0,.7);}
+.g-black-a8{background-color: rgba(0,0,0,.8);}
+.g-black-a9{background-color: rgba(0,0,0,.9);}
+.g-black{background-color: #000000;}
+
+.g-white-a5{background-color: rgba(255,255,255,.5);}
+.g-white-a6{background-color: rgba(255,255,255,.6);}
+.g-white-a7{background-color: rgba(255,255,255,.7);}
+.g-white-a8{background-color: rgba(255,255,255,.8);}
+.g-white-a9{background-color: rgba(255,255,255,.9);}
+.g-white{background-color: #ffffff;}
+
+.g-bg-ccc{background-color: #cccccc;}
+.g-bg-999{background-color: #999999;}
+.g-bg-666{background-color: #666666;}
+.g-bg-333{background-color: #333333;}
+
+//font color
+.g-fff{color: #ffffff;}
+.g-ccc{color: #cccccc;}
+.g-999{color: #999999;}
+.g-666{color: #666666;}
+.g-333{color: #333333;}
+.g-000{color: #000000;}
+
+
+/**
+ * 布局
+ */
+
+//width
+.width-25{width: 25%;}
+.width-33{width: 33.33333333%;}
+.width-50{width: 50%;}
+.width-66{width: 66.66666666%;}
+.width-full{width: 100%;}
+
+//float
+.g-fl{float: left !important;}
+.g-fr{float: right !important;}
+.clearfix:before, .clearfix:after{content: '';clear: both;}
+
+//text
+.g-tl{text-align: left !important;}
+.g-tr{text-align: right !important;}
+.g-tc{text-align: center !important;}
+.g-td{text-decoration: line-through !important;}
+.g-tu{text-decoration: underline !important;}
+
+//font
+html{font-size: 75%;} //12px
+
+    //缩放字体 不要使用在固定width和height的块状元素和内联块状元素上 否则会导致宽度变化
+.g-fz-4{font-size: 1rem; transform: scale(0.33333333); transform-origin: left;}
+.g-fz-6{font-size: 1rem; transform: scale(0.5); transform-origin: left;}
+.g-fz-8{font-size: 1rem; transform: scale(0.66666667); transform-origin: left;}
+.g-fz-10{font-size: 1rem; transform: scale(0.83333333); transform-origin: left;}
+
+.g-fz-12{font-size: 1rem;}
+.g-fz-14{font-size: 1.16666667rem;}
+.g-fz-16{font-size: 1.33333333rem;}
+.g-fz-18{font-size: 1.5rem;}
+.g-fz-20{font-size: 1.66666667rem;}
+.g-fz-22{font-size: 1.83333333rem;}
+.g-fz-24{font-size: 2rem;}
+.g-fz-26{font-size: 2.16666667rem;}
+.g-fz-28{font-size: 2.33333333rem;}
+.g-fz-30{font-size: 2.5rem;}
+.g-fz-32{font-size: 2.66666667rem;}
+.g-fz-34{font-size: 2.83333333rem;}
+.g-fz-36{font-size: 3rem;}
+.g-fz-38{font-size: 3.16666667rem;}
+.g-fz-40{font-size: 3.33333333rem;}
+.g-fz-42{font-size: 3.5rem;}
+.g-fz-44{font-size: 3.66666667rem;}
+.g-fz-46{font-size: 3.83333333rem;}
+.g-fz-48{font-size: 4rem;}
+.g-fz-50{font-size: 4.16666667rem;}
+.g-fz-52{font-size: 4.33333333rem;}
+.g-fz-54{font-size: 4.5rem;}
+.g-fz-56{font-size: 4.66666667rem;}
+.g-fz-58{font-size: 4.83333333rem;}
+
+
+//user cannot see
+.g-overflow{overflow: hidden;}
+.g-hide{display: none;}
+.g-invisible{opacity: 0;}
+.g-text-overflow{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+//grayscale
+.g-gray, .g-disable {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+}
+
+//margin
+.g-m-8{margin: 0.66666667rem;} //8px
+.g-m-16{margin: 1.33333333rem;}
+.g-m-24{margin: 2rem;}
+.g-m-32{margin: 2.66666667rem;}
+.g-m-40{margin: 3.33333333rem;}
+
+.g-mtm-8{margin: 0.66666667rem 0;}
+.g-mtm-16{margin: 1.33333333rem 0;}
+.g-mtm-24{margin: 2rem 0;}
+.g-mtm-32{margin: 2.66666667rem 0;}
+.g-mtm-40{margin: 3.33333333rem 0;}
+
+.g-mlr-8{margin: 0 0.66666667rem;}
+.g-mlr-16{margin: 0 1.33333333rem;}
+.g-mlr-24{margin: 0 2rem;}
+.g-mlr-32{margin: 0 2.66666667rem;}
+.g-mlr-40{margin: 0 3.33333333rem;}
+
+//padding
+.g-p-8{padding: 0.66666667rem;}
+.g-p-16{padding: 1.33333333rem;}
+.g-p-24{padding: 2rem;}
+.g-p-32{padding: 2.66666667rem;}
+.g-p-40{padding: 3.33333333rem;}
+
+.g-ptm-8{padding: 0.66666667rem 0;}
+.g-ptm-16{padding: 1.33333333rem 0;}
+.g-ptm-24{padding: 2rem 0;}
+.g-ptm-32{padding: 2.66666667rem 0;}
+.g-ptm-40{padding: 3.33333333rem 0;}
+
+.g-plr-8{padding: 0 0.66666667rem;}
+.g-plr-16{padding: 0 1.33333333rem;}
+.g-plr-24{padding: 0 2rem;}
+.g-plr-32{padding: 0 2.66666667rem;}
+.g-plr-40{padding: 0 3.33333333rem;}
+
+//fixed
+.g-fixed-full{
+  position: fixed;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+}
+
+//image align-center vertical-middle
+.img-center-wrap {
+  display: table;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+
+  .img-center {
+    display: table-cell;
+    vertical-align: middle;
+
+    img {
+      vertical-align: middle;
+      max-height: 100%;
+      max-width: 100%;
+    }
+  }
+}
+
+/**
+ * 样式
+ */
+
+* {margin: 0; padding: 0; box-sizing: border-box;}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+input, select, textarea {
+  -webkit-appearance: none;
+}
+
+textarea {
+  vertical-align: top;
+}
+
+input[type=submit], a {
+  cursor: pointer;
+}
+
+//弹性盒模型
+.flex-container{
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  -webkit-box-pack: justify;
+
+  //子元素添加该类可使其按比例分布
+  .flex-item{
+    -webkit-box-flex: 1;
+    box-flex: 1;
+  }
+  .flex-item-2{
+    -webkit-box-flex: 2;
+    box-flex: 2;
+  }
+  .flex-item-3{
+    -webkit-box-flex: 3;
+    box-flex: 3;
+  }
+  .flex-item-4{
+    -webkit-box-flex: 14;
+    box-flex: 4;
+  }
+}
+
+    //需要容器内元素超过容器换行时使用该类 会导致.flex-item失效 需要手动设置内个元素的宽高
+.flex-wrap{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+    //一下类需与.flex-container同时使用
+.flex-horizontal{-webkit-box-orient: horizontal;box-orient: horizontal;} //水平排列
+.flex-vertical{-webkit-box-orient: vertical;box-orient: vertical;} //垂直排列
+.flex-reverse{-webkit-box-direction: reverse;box-direction: reverse;} //反序排列 可以水平/垂直同时使用
+
+//rotate
+.rotate-45{-webkit-transform: rotate(45deg); transform: rotate(45deg);}
+.rotate-90{-webkit-transform: rotate(90deg); transform: rotate(90deg);}
+.rotate-135{-webkit-transform: rotate(135deg); transform: rotate(135deg);}
+.rotate-180{-webkit-transform: rotate(180deg); transform: rotate(180deg);} //顺时针
+.rotate-n-45{-webkit-transform: rotate(-45deg); transform: rotate(-45deg);}
+.rotate-n-90{-webkit-transform: rotate(-90deg); transform: rotate(-90deg);}
+.rotate-n-135{-webkit-transform: rotate(-135deg); transform: rotate(-135deg);}
+.rotate-n-180{-webkit-transform: rotate(-180deg); transform: rotate(-180deg);} //逆时针
+
+/**
+ * 全局自定义样式
+ */
+
+//vue编译前不可见
+[v-cloak] {display: none;}
+
+//加载
+.g-loading {
+  position: fixed;
+  display: block;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+}
+
+//按钮
+.g-btn {
+
+}
+
+

@@ -9,6 +9,16 @@
     window.troy = {};
 
     /**
+     * 获取URL参数
+     */
+    troy.getURLParam = function (name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null)return decodeURIComponent(r[2]);
+        return null;
+    };
+
+    /**
      * 判断是否移动设备并返回设备种类
      */
     troy.deviceType = function () {
@@ -153,6 +163,161 @@
         return items[middleIndex]!=value ? false:true;
     };
 
+    /**
+     * 精确除法
+     */
+    troy.addDiv = function (arg1, arg2) {
+        var t1 = 0, t2 = 0, r1, r2;
+        try {
+            t1 = arg1.toString().split(".")[1].length
+        } catch (e) {
+        }
+        try {
+            t2 = arg2.toString().split(".")[1].length
+        } catch (e) {
+        }
+        with (Math) {
+            r1 = Number(arg1.toString().replace(".", ""));
+            r2 = Number(arg2.toString().replace(".", ""));
+            return (r1 / r2) * pow(10, t2 - t1);
+        }
+    };
+
+    /**
+     * 精确乘法
+     */
+    troy.accMul = function (arg1, arg2) {
+        var m = 0, s1 = arg1.toString(), s2 = arg2.toString();
+        try {
+            m += s1.split(".")[1].length
+        } catch (e) {
+        }
+        try {
+            m += s2.split(".")[1].length
+        } catch (e) {
+        }
+        return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m)
+    };
+
+    /**
+     * 精确加法
+     */
+    troy.accAdd = function (arg1, arg2) {
+        var r1, r2, m;
+        try {
+            r1 = arg1.toString().split(".")[1].length
+        } catch (e) {
+            r1 = 0
+        }
+        try {
+            r2 = arg2.toString().split(".")[1].length
+        } catch (e) {
+            r2 = 0
+        }
+        m = Math.pow(10, Math.max(r1, r2));
+        return (arg1 * m + arg2 * m) / m
+    };
+
+    /**
+     * 精确减法
+     */
+    troy.accSubtr = function (arg1, arg2) {
+        var r1, r2, m, n;
+        try {
+            r1 = arg1.toString().split(".")[1].length
+        } catch (e) {
+            r1 = 0
+        }
+        try {
+            r2 = arg2.toString().split(".")[1].length
+        } catch (e) {
+            r2 = 0
+        }
+        m = Math.pow(10, Math.max(r1, r2));
+        //动态控制精度长度
+        n = (r1 >= r2) ? r1 : r2;
+        return ((arg1 * m - arg2 * m) / m).toFixed(n);
+    };
+
+    /**
+     * 加 0 方法 小于10的数字前添加 0
+     * @param {UInt, String} 正整数或可解析为正整数的字符串 小数将舍去小数点后数字
+     * @return {String} 参数小于10返回加 0 后的值 参数不小于10或为其他值则返回原值
+     */
+    troy.addZero = function (num) {
+        var number = parseInt(num);
+
+        if (number < 0 || isNaN(number)) {
+            console.warn(num + ' is not an UInt, please retry');
+            return num.toString();
+        }
+
+        if (number < 10) {
+            return '0'+ number.toString();
+        } else {
+            return number.toString();
+        }
+    };
+
+
+
+    /**
+     * Array prototype methods extend
+     */
+
+    /**
+     * 数组去重
+     */
+    Array.prototype.unique = function () {
+        var result = [], hash = {};
+        for (var i = 0, elem; (elem = this[i]) != null; i++) {
+            if (!hash[elem]) {
+                result.push(elem);
+                hash[elem] = true;
+            }
+        }
+        return result;
+    };
+
+
+
+    /**
+     * Date prototype methods extend
+     */
+
+    /**
+     * 格式化日期
+     * @param {String} joinStr 连接日期符号 '-' '.' '/' 不传该参数或者传入'' 将返回yyyymmddHHMMSS 例如 20161219152324
+     * @param {boolean} onlyDay 是否只需要日期部分 true 返回 yyyy-mm-dd false 返回 yyyy-mm-dd HH:MM:SS
+     */
+    Date.prototype.formate = function (joinStr, onlyDay) {
+        var joinString = '';
+        if (undefined == joinStr || joinStr.length == 0) {
+            joinString = '';
+        } else {
+            joinString = joinStr;
+        }
+
+        var dateArr1 = [], dateArr2 = [], dateStr = '';
+
+        dateArr1.push(this.getFullYear().toString()); //year
+        dateArr1.push(troy.addZero((this.getMonth() + 1))); //month
+        dateArr1.push(troy.addZero((this.getDate()))); //day
+
+        dateStr = dateArr1.join(joinString);
+
+        if (onlyDay) {
+            return dateStr;
+        }
+
+        dateStr = joinString.length != 0 ? (dateStr + ' ') : dateStr;
+
+        dateArr2.push(troy.addZero((this.getHours()))); //hour
+        dateArr2.push(troy.addZero((this.getMinutes()))); //min
+        dateArr2.push(troy.addZero((this.getSeconds()))); //sec
+
+        return joinString.length != 0 ? (dateStr + dateArr2.join(':')) : (dateStr + dateArr2.join(joinString));
+    };
 
 
 

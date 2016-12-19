@@ -2,9 +2,110 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
     <title>index</title>
+    <link rel="stylesheet" href="common.css">
 </head>
+
+<style>
+
+    .div1{
+        height: 2em;
+        line-height: 2em;
+        background: #defabc;
+        font-size: 1em;
+    }
+    .div2{
+        height: 2rem;
+        line-height: 2rem;
+        background: #adefcb;
+        font-size: 0.5rem;
+        -webkit-text-size-adjust:none;
+    }
+
+    .felx-box{
+        background: #deafcb;
+        height: 20rem;
+
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: flex;
+        /*-webkit-box-pack: justify;*/
+        /*-webkit-box-orient: horizontal;*/
+        /*-webkit-box-orient: vertical;*/
+        -webkit-box-direction: reverse;
+        flex-wrap: wrap;
+        -webkit-flex-wrap: wrap;
+    }
+
+    .flex{
+        /*-webkit-box-flex: 1;*/
+        width: 33.33333333%;
+        height: 33.33333333%;
+        /*-webkit-flex-wrap: wrap;*/
+
+    }
+
+    .img-wrapper{
+        width: 200px;
+        height: 200px;
+
+
+    }
+
+
+
+</style>
+
 <body>
+
+<div class="div1 width-full">
+    是谁送你来到我身边
+</div>
+
+<div class="div2 width-full g-tr">
+    是那遥远的明月明月
+</div>
+
+<div class="felx-box width-full">
+    <div class="flex" style="background: #ad6cbf;">
+
+    </div>
+    <div class="flex" style="background: #4aecbf;">
+
+    </div>
+    <div class="flex" style="background: #ae3cbf;">
+
+    </div>
+    <div class="flex" style="background: #adcebf;">
+
+    </div>
+    <div class="flex" style="background: #adfbce;">
+
+    </div>
+    <div class="flex" style="background: #adcbef;">
+
+    </div>
+    <div class="flex" style="background: #b99daf;">
+
+    </div>
+    <div class="flex" style="background: #a87cbf;">
+
+    </div>
+    <div class="flex" style="background: #adec70;">
+
+    </div>
+
+</div>
+
+<div class="img-wrapper">
+    <span>
+
+    </span>
+</div>
+
+
 
 
 <script src="common.js"></script>
