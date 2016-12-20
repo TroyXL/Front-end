@@ -4,143 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
     <title>index</title>
-    <link rel="stylesheet" href="common.css">
-    <link rel="stylesheet" href="picsviewer.css">
+    <link rel="stylesheet" href="common/common.css">
 </head>
-
-<style>
-
-    .div1{
-        height: 2em;
-        line-height: 2em;
-        background: #defabc;
-        font-size: 1em;
-    }
-    .div2{
-        height: 2rem;
-        line-height: 2rem;
-        background: #adefcb;
-        font-size: 0.5rem;
-        -webkit-text-size-adjust:none;
-    }
-
-    .felx-box{
-        background: #deafcb;
-        height: 20rem;
-
-        display: -webkit-box;
-        display: -moz-box;
-        display: -ms-flexbox;
-        display: flex;
-        /*-webkit-box-pack: justify;*/
-        /*-webkit-box-orient: horizontal;*/
-        /*-webkit-box-orient: vertical;*/
-        -webkit-box-direction: reverse;
-        flex-wrap: wrap;
-        -webkit-flex-wrap: wrap;
-    }
-
-    .flex{
-        /*-webkit-box-flex: 1;*/
-        width: 33.33333333%;
-        height: 33.33333333%;
-        /*-webkit-flex-wrap: wrap;*/
-
-    }
-
-    .img-wrapper{
-        width: 200px;
-        height: 200px;
-
-
-    }
-
-
-
-</style>
-
 <body>
 
-<div class="div1 width-full">
-    是谁送你来到我身边
-</div>
+<style>
+    li{
+        padding: 1rem;
+        font-size: 1.33333333rem;
+    }
+</style>
 
-<div class="div2 width-full g-tr">
-    是那遥远的明月明月
-</div>
+<ul>
+    <li>
+        <a href="common/index.html">common.html</a>
+    </li>
+    <li>
+        <a href="canvas-dots-lines/index.html">free-dots.html</a>
+    </li>
+    <li>
+        <a href="compressImageSize/compressImage.html">compressImage.html</a>
+    </li>
+    <li>
+        <a href="hungry-snack/hungry-snack.html">hungry-snack.html</a>
+    </li>
+    <li>
+        <a href="picsman-viewer/index.html">picsman-viewer.html</a>
+    </li>
+</ul>
 
-<div class="felx-box width-full">
-    <div class="flex" style="background: #ad6cbf;">
-
-    </div>
-    <div class="flex" style="background: #4aecbf;">
-
-    </div>
-    <div class="flex" style="background: #ae3cbf;">
-
-    </div>
-    <div class="flex" style="background: #adcebf;">
-
-    </div>
-    <div class="flex" style="background: #adfbce;">
-
-    </div>
-    <div class="flex" style="background: #adcbef;">
-
-    </div>
-    <div class="flex" style="background: #b99daf;">
-
-    </div>
-    <div class="flex" style="background: #a87cbf;">
-
-    </div>
-    <div class="flex" style="background: #adec70;">
-
-    </div>
-
-</div>
-
-<div class="img-wrapper">
-
-    <!--预览图包裹层-->
-    <div class="picsman-viewer-wrapper">
-        <!--预览图主体-->
-        <div class="picsman-viewer">
-
-            <!--装框 角  宽高相等fw-->
-            <div class="frame-corner frame-corner-top-left"></div>
-            <div class="frame-corner frame-corner-top-right"></div>
-            <div class="frame-corner frame-corner-bottom-left"></div>
-            <div class="frame-corner frame-corner-bottom-left"></div>
-
-            <!--装框 边  top/bottom 高fw.宽100-2fw  left、right 宽fw.高100-2fw-->
-            <div class="frame-border frame-border-top"></div>
-            <div class="frame-border frame-border-bottom"></div>
-            <div class="frame-border frame-border-left"></div>
-            <div class="frame-border frame-border-right"></div>
-
-            <!--卡纸  宽高 100%-2fw-->
-            <div class="cardboard">
-
-                <!--图片  宽高  卡纸尺寸-边距cw-->
-                <img src="" alt="" class="picsman">
-                
-            </div>
-
-        </div>
-    </div>
-
-</div>
-
-
-
-
-<script src="common.js"></script>
-
-<script>
-//    alert(troy.deviceType());
-//    alert(troy.isWeixin());
-
-</script>
 </body>
 </html>
