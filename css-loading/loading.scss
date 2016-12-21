@@ -1,0 +1,76 @@
+.spell{
+  color: #ffffff;
+  font-size: 2rem;
+
+  &:after{
+    content: '                    }';
+    animation: spelling 4000ms linear 0s infinite normal;
+  }
+}
+
+@keyframes spelling {
+  0% {
+    content: '                    }';
+  }
+  5% {
+    content: 'W                   }';
+  }
+  10% {
+    content: 'We                  }';
+  }
+  15% {
+    content: 'We a                }';
+  }
+  20% {
+    content: 'We ar               }';
+  }
+  25% {
+    content: 'We are              }';
+  }
+  30% {
+    content: 'We are p            }';
+  }
+  35% {
+    content: 'We are pr           }';
+  }
+  40% {
+    content: 'We are pre          }';
+  }
+  45% {
+    content: 'We are prep         }';
+  }
+  50% {
+    content: 'We are prepa        }';
+  }
+  55% {
+    content: 'We are prepar       }';
+  }
+  60% {
+    content: 'We are prepari      }';
+  }
+  65% {
+    content: 'We are preparin     }';
+  }
+  70% {
+    content: 'We are preparing    }';
+  }
+  75% {
+    content: 'We are preparing .  }';
+  }
+  80% {
+    content: 'We are preparing .. }';
+  }
+  85% {
+    content: 'We are preparing ...}';
+  }
+  90% {
+    content: 'We are preparing .  }';
+  }
+  95% {
+    content: 'We are preparing .. }';
+  }
+  100% {
+    content: 'We are preparing ...}';
+  }
+
+}

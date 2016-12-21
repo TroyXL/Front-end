@@ -259,6 +259,45 @@
         }
     };
 
+    /**
+     * 挂载在 window.troy 下的事件监听器
+     */
+    troy.eventEmitter = function () {
+        return new EventEmitter();
+    };
+
+    /**
+     * 事件监听器
+     */
+    function EventEmitter() {
+        this.handlers = {};
+    };
+    EventEmitter.prototype = {
+        constructor: EventEmitter,
+        on: function(name, handler) {
+            if (!this.handlers[name]) {
+                this.handlers[name] = handler;
+            }
+            return this;
+        },
+        emit: function(name) {
+            if (this.handlers[name]) {
+                this.handlers[name]();
+            }
+            return this;
+        },
+        removeEmitter: function(name) {
+            if (this.handlers[name]) {
+                delete this.handlers[name];
+            }
+            return this;
+        },
+        printEmitters: function() {
+            console.log(this.handlers);
+            return this;
+        }
+    };
+
 
 
     /**
@@ -318,6 +357,9 @@
 
         return joinString.length != 0 ? (dateStr + dateArr2.join(':')) : (dateStr + dateArr2.join(joinString));
     };
+
+
+
 
 
 
