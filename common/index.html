@@ -89,9 +89,30 @@
 
 </div>
 
+<script src="promise.js"></script>
+
 <script>
 //    alert(troy.deviceType());
 //    alert(troy.isWeixin());
+
+    var p = new Promise(function () {
+        var self = this;
+        setTimeout(function () {
+            console.log('p1 5s')
+            self.resolve();
+        }, 5000);
+    });
+    p
+            .then(function () {
+                var self = this;
+                setTimeout(function () {
+                    console.log('p1 success 2s p2');
+                    self.resolve();
+                }, 2000);
+            })
+            .then(function () {
+                console.log('p2 success');
+            })
 
 </script>
 </body>
