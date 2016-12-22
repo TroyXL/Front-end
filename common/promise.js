@@ -5,7 +5,7 @@
 	} // Promise挂载到API对象下
 
     // 声明一个Promise对象
-    function promise(callback) {
+    function promise(callback) {0
         Deffer.pending = false; // 修改等待状态为false
         if (typeof callback == 'function') {
             this.once = callback; // 如果参数callback是函数，就把callback赋值给Promise的once变量
