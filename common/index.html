@@ -111,7 +111,17 @@
                 }, 2000);
             })
             .then(function () {
-                console.log('p2 success');
+                var self = this;
+                setTimeout(function () {
+                    console.log('p2 success 1s p3');
+                    self.reject();
+                }, 1000);
+
+            })
+            .then(function () {
+                console.log('p3 success');
+            }, function () {
+                console.log('p3 fail');
             })
 
 </script>
