@@ -99,30 +99,47 @@
         var self = this;
         setTimeout(function () {
             console.log('p1 5s')
-            self.resolve();
+            self.resolve('test', 'args');
         }, 5000);
     });
     p
-            .then(function () {
+            .then(function (arg1, arg2) {
                 var self = this;
+                console.log(arg1, arg2);
                 setTimeout(function () {
                     console.log('p1 success 2s p2');
-                    self.resolve();
+                    self.reject();
+                    console.log('p1 after reject fn');
                 }, 2000);
-            })
-            .then(function () {
+            },function () {
                 var self = this;
                 setTimeout(function () {
-                    console.log('p2 success 1s p3');
+                    console.log('p1 fail 2s p2');
                     self.reject();
-                }, 1000);
+                }, 2000);
+            })
 
-            })
-            .then(function () {
-                console.log('p3 success');
-            }, function () {
-                console.log('p3 fail');
-            })
+//            .then(function () {
+//                var self = this;
+//                setTimeout(function () {
+//                    console.log('p2 success 1s p3');
+//                    self.reject();
+//                }, 1000);
+//
+//            },function () {
+//                var self = this;
+//                setTimeout(function () {
+//                    console.log('p2 fail 1s p3');
+//                    self.resolve();
+//                }, 1000);
+//
+//            })
+//
+//            .then(function () {
+//                console.log('p3 success');
+//            }, function () {
+//                console.log('p3 fail');
+//            })
 
 </script>
 </body>
