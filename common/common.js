@@ -35,6 +35,29 @@
     };
 
     /**
+     * 拷贝方法 回调使用promise
+     * @param {string[element]} inputEleId input元素id 必须是input
+     * @return {object} promise
+     */
+    troy.copy = function (inputEleId){
+        if (inputEleId.slice(0,1) !== '#') {
+            console.error(inputEleId + ' is not an id');
+            return null;
+        }
+        var promise = troy.promise(function () {
+            var self = this,
+                copyDOM = document.querySelector(inputEleId);
+            copyDOM.select();
+            if (document.execCommand('copy')) {
+                self.resolve();
+            } else {
+                self.reject();
+            }
+        });
+        return promise;
+    };
+
+    /**
      * 判断是否移动设备并返回设备种类
      */
     troy.deviceType = function () {
