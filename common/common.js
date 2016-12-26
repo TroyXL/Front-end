@@ -390,26 +390,104 @@ function EventEmitter() {
 };
 EventEmitter.prototype = {
     constructor: EventEmitter,
-    on: function(name, handler) {
-        if (!this.handlers[name]) {
-            this.handlers[name] = handler;
+
+    /**
+     * 添加事件监听
+     * @param key {String} 事件名 必须
+     * @param handler {Function} 处理方法 必须
+     * @return {EventEmitter}
+     */
+    on: function(key, handler) {
+        // handler不是function时 抛出异常 停止运行
+        if (typeof handler !== 'function') {
+            throw handler + 'is not an function'
         }
+        // 如果该事件为undefined 则初始化该事件组为对象
+        if (undefined === this.handlers[key]) {
+            this.handlers[key] = {}
+        }
+        // 获取handler的方法名 匿名函数方法名为''
+        var fnName = handler.name
+        if (fnName === '') {
+            fnName = troy.randomString(32, false, 'FN-')
+        }
+        // 为该事件添加需要执行的方法
+        this.handlers[key][fnName] = handler
+
+        return this
+    },
+
+    /**
+     * 触发事件监听
+     * @param key {String} 事件名 必须
+     * @param args {arguments} 参数 可选
+     * @return {EventEmitter}
+     */
+    emit: function(key, args) {console.log(typeof arguments, arguments)
+        // 确保对应的事件方法存在
+        if (undefined !== this.handlers[key]) {
+            var self = this,
+                argsArr = []
+
+            for (index in arguments) {
+                argsArr.push(arguments[index])
+            }
+            argsArr.splice(0, 1)
+
+            // 遍历所有属性并执行对应的方法
+            for (fnName in this.handlers[key]) {
+                var thisFn = function () {
+                    self.handlers[key][fnName].apply(this, argsArr)
+                }()
+            }
+        }
+
         return this;
     },
-    emit: function(name) {
-        if (this.handlers[name]) {
-            this.handlers[name]();
+
+    /**
+     * 移除事件监听
+     * @param key {String} 事件名 必须
+     * @param fnName {String} 事件中需要被移除的方法名 可选 不传则删除该事件中的所有方法
+     * @return {EventEmitter}
+     */
+    removeEmitter: function(key, fnName) {
+        if (undefined === fnName) {
+            delete this.handlers[key];
+        } else {
+            delete this.handlers[key][fnName];
         }
+
         return this;
     },
-    removeEmitter: function(name) {
-        if (this.handlers[name]) {
-            delete this.handlers[name];
+
+    /**
+     * 移除所有事件监听
+     * @param key {String} 事件名 可选 不传则删除该监听器中的所有事件及方法
+     * @return {EventEmitter}
+     */
+    removeAllEmitter: function (key) {
+        if (undefined === key) {
+            this.handlers = {};
+        } else {
+            delete this.handlers[key];
         }
+
         return this;
     },
-    printEmitters: function() {
-        console.log(this.handlers);
+
+    /**
+     * 打印事件监听器中的方法
+     * @param key {String} 事件名 可选 不传则打印该监听器中的所有事件及方法
+     * @return {EventEmitter}
+     */
+    printEmitters: function(key) {
+        if (undefined === key) {
+            console.log(this.handlers);
+        } else {
+            console.log(this.handlers[key]);
+        }
+
         return this;
     }
 };
@@ -424,7 +502,7 @@ function Promise(fn) {
     }
 
     this.status = 'pending'; // 当前状态 pending resolve reject complete
-    this.data = []; // 回调参数数组
+    this.data = {}; // 回调参数
     this.once = fn; // 存储fn
     this.handles = {
         resolve: null,

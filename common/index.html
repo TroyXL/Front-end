@@ -107,6 +107,47 @@ function clickCopyBtn() {
     })
 }
 
+var emit = new EventEmitter()
+emit.on('test', function (a, b) {
+    console.log('test1', a, b)
+})
+emit.on('test', function () {
+    console.log('test2')
+})
+emit.on('test', function (a) {
+    console.log('test3', a)
+})
+emit.on('test', function () {
+    console.log('test4')
+})
+emit.on('test', function () {
+    console.log('test5')
+})
+emit.on('test', function () {
+    console.log('test6')
+})
+function test7() {
+    console.log('test7')
+}
+emit.on('test', test7)
+emit.on('test', function () {
+    console.log('test8')
+})
+emit.on('another', function () {
+    console.log('another')
+})
+emit.on('another2', function () {
+    console.log('another2')
+})
+emit.emit('test', 'joke', 'laugh')
+emit.removeEmitter('test', 'test7')
+emit.printEmitters()
+emit.emit('test', 'joke', 'laugh')
+emit.removeEmitter('test')
+emit.printEmitters()
+emit.removeAllEmitter()
+emit.printEmitters()
+
     var p = new Promise(function () {
         var self = this;
         setTimeout(function () {
@@ -114,44 +155,21 @@ function clickCopyBtn() {
             self.resolve('test', 'args');
         }, 5000);
     });
-//    p
-//            .then(function (err, data) {
-//                var self = this;
-//                console.log(arg1);
-//                setTimeout(function () {
-//                    console.log('p1 success 2s p2');
-//                    self.reject();
-//                    console.log('p1 after reject fn');
-//                }, 2000);
-//            },function () {
-//                var self = this;
-//                setTimeout(function () {
-//                    console.log('p1 fail 2s p2');
-//                    self.reject();
-//                }, 2000);
-//            })
-
-//            .then(function () {
-//                var self = this;
-//                setTimeout(function () {
-//                    console.log('p2 success 1s p3');
-//                    self.reject();
-//                }, 1000);
-//
-//            },function () {
-//                var self = this;
-//                setTimeout(function () {
-//                    console.log('p2 fail 1s p3');
-//                    self.resolve();
-//                }, 1000);
-//
-//            })
-//
-//            .then(function () {
-//                console.log('p3 success');
-//            }, function () {
-//                console.log('p3 fail');
-//            })
+    p.then(function (err, data) {
+        var self = this;
+        console.log(data);
+        setTimeout(function () {
+            console.log('p1 success 2s p2');
+            self.reject();
+            console.log('p1 after reject fn');
+        }, 2000);
+    },function () {
+        var self = this;
+        setTimeout(function () {
+            console.log('p1 fail 2s p2');
+            self.reject();
+        }, 2000);
+    })
 
 </script>
 </body>
