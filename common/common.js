@@ -400,7 +400,7 @@ EventEmitter.prototype = {
     on: function(key, handler) {
         // handler不是function时 抛出异常 停止运行
         if (typeof handler !== 'function') {
-            throw handler + 'is not an function'
+            throw new Error(handler + 'is not an function')
         }
         // 如果该事件为undefined 则初始化该事件组为对象
         if (undefined === this.handlers[key]) {
