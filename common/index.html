@@ -109,7 +109,7 @@
 
 <div class="thinner-border-quarter test-border-1"></div>
 <div class="thinner-border-half test-border-1"></div>
-<div class="test-border-2"></div>
+<div class="test-border-2" style="border-radius: 5px;"></div>
 
 <script src="promise.js"></script>
 
@@ -124,6 +124,12 @@ function clickCopyBtn() {
         console.log('复制失败')
     })
 }
+
+var div = document.getElementsByClassName('test-border-2')[0];
+div.style.cssText += 'background: #deafcb;'
+
+var div2 = document.querySelectorAll('.test-border-1');
+console.log(div2)
 
 var emit = new EventEmitter()
 emit.on('test', function (a, b) {
@@ -157,14 +163,14 @@ emit.on('another', function () {
 emit.on('another2', function () {
     console.log('another2')
 })
-emit.emit('test', 'joke', 'laugh')
-emit.removeEmitter('test', 'test7')
-emit.printEmitters()
-emit.emit('test', 'joke', 'laugh')
-emit.removeEmitter('test')
-emit.printEmitters()
-emit.removeAllEmitter()
-emit.printEmitters()
+//emit.emit('test', 'joke', 'laugh')
+//emit.removeEmitter('test', 'test7')
+//emit.printEmitters()
+//emit.emit('test', 'joke', 'laugh')
+//emit.removeEmitter('test')
+//emit.printEmitters()
+//emit.removeAllEmitter()
+//emit.printEmitters()
 
     var p = new Promise(function () {
         var self = this;
