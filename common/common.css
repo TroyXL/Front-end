@@ -321,6 +321,10 @@ html {
   left: 0;
   right: 0; }
 
+.g-max-width-640 {
+  max-width: 640px;
+  margin: auto; }
+
 .img-center-wrap {
   display: table;
   width: 100%;

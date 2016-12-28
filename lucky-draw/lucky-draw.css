@@ -1,0 +1,67 @@
+.lucky-draw-wrapper {
+  width: 300px;
+  height: 300px;
+  margin: 30px auto;
+  font-size: 0; }
+  .lucky-draw-wrapper .lucky-draw-item {
+    position: relative;
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    font-size: 14px;
+    z-index: 0;
+    transition: 0.2s ease-in; }
+    .lucky-draw-wrapper .lucky-draw-item .lucky-draw-item-inner {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      line-height: 80px;
+      top: 10px;
+      left: 10px;
+      text-align: center;
+      backface-visibility: hidden;
+      transition: 0.2s ease-in; }
+    .lucky-draw-wrapper .lucky-draw-item .lucky-draw-item-inner-bg {
+      background: #bdaefc; }
+    .lucky-draw-wrapper .lucky-draw-item .lucky-draw-item-inner-content {
+      background: #afebcd; }
+  .lucky-draw-wrapper .lucky-draw-start {
+    z-index: 1; }
+    .lucky-draw-wrapper .lucky-draw-start .lucky-draw-item-inner {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      line-height: 40px;
+      top: 10px;
+      left: 10px;
+      text-align: center;
+      background: #daefcb; }
+
+.animate0 {
+  transform: translate(100%, 100%) !important; }
+
+.animate1 {
+  transform: translate(0, 100%) !important; }
+
+.animate2 {
+  transform: translate(-100%, 100%) !important; }
+
+.animate3 {
+  transform: translate(100%, 0) !important; }
+
+.animate4 {
+  transform: translate(-100%, 0) !important; }
+
+.animate5 {
+  transform: translate(100%, -100%) !important; }
+
+.animate6 {
+  transform: translate(0, -100%) !important; }
+
+.animate7 {
+  transform: translate(-100%, -100%) !important; }
+
+.rotate {
+  transform: rotateY(180deg); }
+
+/*# sourceMappingURL=lucky-draw.css.map */

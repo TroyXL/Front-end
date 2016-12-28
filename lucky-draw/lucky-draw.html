@@ -4,8 +4,155 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
     <title>抽奖</title>
+
+    <link rel="stylesheet" href="../common/common.css">
+    <link rel="stylesheet" href="lucky-draw.css">
+
 </head>
 <body>
+
+<div class="g-max-width-640">
+
+    <div class="lucky-draw-wrapper">
+
+        <div class="lucky-draw-item lucky-draw-animate" data-index="0">
+            <div class="lucky-draw-item-inner lucky-draw-item-inner-bg rotate">背景</div>
+            <div class="lucky-draw-item-inner lucky-draw-item-inner-content">奖品0</div>
+        </div>
+        <div class="lucky-draw-item lucky-draw-animate" data-index="1">
+            <div class="lucky-draw-item-inner lucky-draw-item-inner-bg rotate">背景</div>
+            <div class="lucky-draw-item-inner lucky-draw-item-inner-content">奖品1</div>
+        </div>
+        <div class="lucky-draw-item lucky-draw-animate" data-index="2">
+            <div class="lucky-draw-item-inner lucky-draw-item-inner-bg rotate">背景</div>
+            <div class="lucky-draw-item-inner lucky-draw-item-inner-content">奖品2</div>
+        </div>
+        <div class="lucky-draw-item lucky-draw-animate" data-index="3">
+            <div class="lucky-draw-item-inner lucky-draw-item-inner-bg rotate">背景</div>
+            <div class="lucky-draw-item-inner lucky-draw-item-inner-content">奖品3</div>
+        </div>
+
+        <!--中心按钮-->
+        <div class="lucky-draw-item lucky-draw-start">
+            <div class="lucky-draw-item-inner">抽奖<br><span class="draw-left-number"></span></div>
+        </div>
+
+        <div class="lucky-draw-item lucky-draw-animate" data-index="4">
+            <div class="lucky-draw-item-inner lucky-draw-item-inner-bg rotate">背景</div>
+            <div class="lucky-draw-item-inner lucky-draw-item-inner-content">奖品4</div>
+        </div>
+        <div class="lucky-draw-item lucky-draw-animate" data-index="5">
+            <div class="lucky-draw-item-inner lucky-draw-item-inner-bg rotate">背景</div>
+            <div class="lucky-draw-item-inner lucky-draw-item-inner-content">奖品5</div>
+        </div>
+        <div class="lucky-draw-item lucky-draw-animate" data-index="6">
+            <div class="lucky-draw-item-inner lucky-draw-item-inner-bg rotate">背景</div>
+            <div class="lucky-draw-item-inner lucky-draw-item-inner-content">奖品6</div>
+        </div>
+        <div class="lucky-draw-item lucky-draw-animate" data-index="7">
+            <div class="lucky-draw-item-inner lucky-draw-item-inner-bg rotate">背景</div>
+            <div class="lucky-draw-item-inner lucky-draw-item-inner-content">奖品7</div>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="jquery-1.8.3.min.js"></script>
+<script>
+    var $animateItems = $('.lucky-draw-animate'),
+        $itemsInnerBg = $('.lucky-draw-item-inner-bg'),
+        $itemsInnerContent = $('.lucky-draw-item-inner-content');
+
+    var isDrawing = false,
+        drawNumber = 8,
+        timer;
+
+    function showLeftDrawNumber() {
+        $('.draw-left-number').text('剩余'+drawNumber+'次')
+    }
+    showLeftDrawNumber();
+
+    $('.lucky-draw-start').click(function () {
+
+        if (isDrawing || drawNumber == 0) return;
+        isDrawing = !isDrawing;
+        drawNumber = drawNumber -1;
+        showLeftDrawNumber();
+
+        var i = 0;
+        var showAnimateRotateIn = function () {
+            clearTimeout(timer);
+            if (i < 8) {
+                timer = setTimeout(function () {
+                    $itemsInnerBg.eq(i).removeClass('rotate');
+                    $itemsInnerContent.eq(i).addClass('rotate');
+                    i = i + 1;
+                    showAnimateRotateIn();
+                }, 50)
+            } else {
+                timer = setTimeout(showAnimateIn, 1000);
+            }
+        };
+        showAnimateRotateIn();
+
+
+        var j = 0;
+        var showAnimateIn = function () {
+            clearTimeout(timer);
+            if (j < 8) {
+                timer = setTimeout(function () {
+                    $animateItems.eq(j).addClass('animate'+j);
+                    j = j + 1;
+                    showAnimateIn();
+                }, 50)
+            } else {
+                timer = setTimeout(showAnimateOut, 1000);
+            }
+        };
+
+        var k = 0;
+        var showAnimateOut = function () {
+            clearTimeout(timer);
+            if (k < 8) {
+                timer = setTimeout(function () {
+                    $animateItems.eq(k).removeClass('animate'+k);
+                    k = k + 1;
+                    showAnimateOut();
+                }, 50)
+            } else {
+                isDrawing = !isDrawing;
+            }
+        };
+
+
+    });
+
+    $animateItems.click(function () {
+
+        if (isDrawing) return;
+
+        var index = $(this).attr('data-index');
+        $itemsInnerBg.eq(index).addClass('rotate');
+        $itemsInnerContent.eq(index).removeClass('rotate');
+
+        var l = 0;
+        var showAnimateRotateOut = function () {
+            clearTimeout(timer);
+            if (l < 8) {
+                timer = setTimeout(function () {
+                    $itemsInnerBg.eq(l).addClass('rotate');
+                    $itemsInnerContent.eq(l).removeClass('rotate');
+                    l = l + 1;
+                    showAnimateRotateOut();
+                }, 50)
+            }
+        };
+
+        clearTimeout(timer);
+        timer = setTimeout(showAnimateRotateOut, 1000);
+    })
+</script>
 
 </body>
 </html>

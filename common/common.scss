@@ -150,6 +150,11 @@ html{font-size: 75%;} //12px
   left: 0; right: 0;
 }
 
+.g-max-width-640{
+  max-width: 640px;
+  margin: auto;
+}
+
 //image align-center vertical-middle
 .img-center-wrap {
   display: table;
