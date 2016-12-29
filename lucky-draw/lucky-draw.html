@@ -16,19 +16,19 @@
     <div class="lucky-draw-wrapper">
 
         <div class="lucky-draw-item lucky-draw-animate" data-index="0">
-            <div class="lucky-draw-item-inner lucky-draw-item-inner-bg rotate">背景</div>
+            <div class="lucky-draw-item-inner lucky-draw-item-inner-bg">背景</div>
             <div class="lucky-draw-item-inner lucky-draw-item-inner-content">奖品0</div>
         </div>
         <div class="lucky-draw-item lucky-draw-animate" data-index="1">
-            <div class="lucky-draw-item-inner lucky-draw-item-inner-bg rotate">背景</div>
+            <div class="lucky-draw-item-inner lucky-draw-item-inner-bg">背景</div>
             <div class="lucky-draw-item-inner lucky-draw-item-inner-content">奖品1</div>
         </div>
         <div class="lucky-draw-item lucky-draw-animate" data-index="2">
-            <div class="lucky-draw-item-inner lucky-draw-item-inner-bg rotate">背景</div>
+            <div class="lucky-draw-item-inner lucky-draw-item-inner-bg">背景</div>
             <div class="lucky-draw-item-inner lucky-draw-item-inner-content">奖品2</div>
         </div>
         <div class="lucky-draw-item lucky-draw-animate" data-index="3">
-            <div class="lucky-draw-item-inner lucky-draw-item-inner-bg rotate">背景</div>
+            <div class="lucky-draw-item-inner lucky-draw-item-inner-bg">背景</div>
             <div class="lucky-draw-item-inner lucky-draw-item-inner-content">奖品3</div>
         </div>
 
@@ -38,19 +38,19 @@
         </div>
 
         <div class="lucky-draw-item lucky-draw-animate" data-index="4">
-            <div class="lucky-draw-item-inner lucky-draw-item-inner-bg rotate">背景</div>
+            <div class="lucky-draw-item-inner lucky-draw-item-inner-bg">背景</div>
             <div class="lucky-draw-item-inner lucky-draw-item-inner-content">奖品4</div>
         </div>
         <div class="lucky-draw-item lucky-draw-animate" data-index="5">
-            <div class="lucky-draw-item-inner lucky-draw-item-inner-bg rotate">背景</div>
+            <div class="lucky-draw-item-inner lucky-draw-item-inner-bg">背景</div>
             <div class="lucky-draw-item-inner lucky-draw-item-inner-content">奖品5</div>
         </div>
         <div class="lucky-draw-item lucky-draw-animate" data-index="6">
-            <div class="lucky-draw-item-inner lucky-draw-item-inner-bg rotate">背景</div>
+            <div class="lucky-draw-item-inner lucky-draw-item-inner-bg">背景</div>
             <div class="lucky-draw-item-inner lucky-draw-item-inner-content">奖品6</div>
         </div>
         <div class="lucky-draw-item lucky-draw-animate" data-index="7">
-            <div class="lucky-draw-item-inner lucky-draw-item-inner-bg rotate">背景</div>
+            <div class="lucky-draw-item-inner lucky-draw-item-inner-bg">背景</div>
             <div class="lucky-draw-item-inner lucky-draw-item-inner-content">奖品7</div>
         </div>
 
@@ -60,19 +60,37 @@
 
 <script src="jquery-1.8.3.min.js"></script>
 <script>
-    var $animateItems = $('.lucky-draw-animate'),
+    // 判断是否IE
+    var isIE = function () {
+        if (!!window.ActiveXObject || "ActiveXObject" in window)
+            return true;
+        else
+            return false;
+    }();
+
+    // 获取翻牌相关节点
+    var $animateItems = $('.lucky-draw-item'),//$('.lucky-draw-animate'),
         $itemsInnerBg = $('.lucky-draw-item-inner-bg'),
         $itemsInnerContent = $('.lucky-draw-item-inner-content');
 
-    var isDrawing = false,
-        drawNumber = 8,
-        timer;
+    // 相关参数
+    var isDrawing = false, // 是否正在翻牌
+        drawNumber = 8, // 翻牌次数
+        timer; // 动画计时器
 
+    if (!isIE) { // 如果当前不是IE 给翻牌背景添加rotate 实现反转效果
+        $itemsInnerBg.addClass('rotate');
+    } else { // 如果当前是IE 隐藏背景 实现淡入淡出效果
+        $itemsInnerBg.addClass('hide');
+    }
+
+    // 显示剩余翻牌次数
     function showLeftDrawNumber() {
         $('.draw-left-number').text('剩余'+drawNumber+'次')
     }
     showLeftDrawNumber();
 
+    // 点击开始的动画
     $('.lucky-draw-start').click(function () {
 
         if (isDrawing || drawNumber == 0) return;
@@ -80,6 +98,7 @@
         drawNumber = drawNumber -1;
         showLeftDrawNumber();
 
+        // 翻牌效果 隐藏正面
         var i = 0;
         var showAnimateRotateIn = function () {
             clearTimeout(timer);
@@ -94,15 +113,18 @@
                 timer = setTimeout(showAnimateIn, 1000);
             }
         };
-        showAnimateRotateIn();
 
-
+        // 收缩动画
         var j = 0;
         var showAnimateIn = function () {
             clearTimeout(timer);
-            if (j < 8) {
+            if (j < 9) {
                 timer = setTimeout(function () {
-                    $animateItems.eq(j).addClass('animate'+j);
+//                    $animateItems.eq(j).addClass('animate'+j);
+                    $animateItems.eq(j).animate({
+                        'top': (100 - 100 * parseInt(j / 3)) + 'px',
+                        'left': (100 - 100 * (j % 3)) + 'px'
+                    })
                     j = j + 1;
                     showAnimateIn();
                 }, 50)
@@ -111,12 +133,17 @@
             }
         };
 
+        // 释放动画
         var k = 0;
         var showAnimateOut = function () {
             clearTimeout(timer);
-            if (k < 8) {
+            if (k < 9) {
                 timer = setTimeout(function () {
-                    $animateItems.eq(k).removeClass('animate'+k);
+//                    $animateItems.eq(k).removeClass('animate'+k);
+                    $animateItems.eq(k).animate({
+                        'top': 0,
+                        'left': 0
+                    })
                     k = k + 1;
                     showAnimateOut();
                 }, 50)
@@ -125,17 +152,26 @@
             }
         };
 
+        // 启动动画
+        if (isIE) {
+            $itemsInnerBg.fadeIn(300);
+            $itemsInnerContent.fadeOut(300);
+            timer = setTimeout(showAnimateIn, 1000);
+        } else {
+            showAnimateRotateIn();
+        }
+
+
+
 
     });
 
+    // 点击卡片 反转展示抽奖结果
     $animateItems.click(function () {
 
         if (isDrawing) return;
 
-        var index = $(this).attr('data-index');
-        $itemsInnerBg.eq(index).addClass('rotate');
-        $itemsInnerContent.eq(index).removeClass('rotate');
-
+        // 翻牌效果 隐藏背面
         var l = 0;
         var showAnimateRotateOut = function () {
             clearTimeout(timer);
@@ -149,8 +185,26 @@
             }
         };
 
+        // 展示抽奖结果
+        var index = $(this).attr('data-index');
+        if (isIE) {
+            $itemsInnerBg.eq(index).fadeOut(300);
+            $itemsInnerContent.eq(index).fadeIn(300);
+        } else {
+            $itemsInnerBg.eq(index).addClass('rotate');
+            $itemsInnerContent.eq(index).removeClass('rotate');
+        }
+
+        // 展示所有结果
         clearTimeout(timer);
-        timer = setTimeout(showAnimateRotateOut, 1000);
+        timer = setTimeout(function () {
+            if (isIE) {
+                $itemsInnerBg.fadeOut(300);
+                $itemsInnerContent.fadeIn(300);
+            } else {
+                showAnimateRotateOut();
+            }
+        }, 1000);
     })
 </script>
 

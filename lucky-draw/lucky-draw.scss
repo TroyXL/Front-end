@@ -22,7 +22,7 @@
       top: 10px;
       left: 10px;
       text-align: center;
-      backface-visibility:hidden;
+      backface-visibility: hidden;
       transition: 0.2s ease-in;
     }
     .lucky-draw-item-inner-bg{background: #bdaefc;}
@@ -55,4 +55,5 @@
 .animate7{transform: translate(-100%,-100%) !important;}
 
 .rotate{transform: rotateY(180deg);}
+.hide{display: none;}
 

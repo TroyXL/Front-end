@@ -1,10 +1,20 @@
 /**
  * Created by troyxu on 16/12/8.
  * only used in HTML5
+ * no support all IEs
  */
 ;(function () {
 
-    window.requestAnimationFrame = requestAnimationFrame || webkitRequestAnimationFrame || mozRequestAnimationFrame || msRequestAnimationFrame || oRequestAnimationFrame;
+    //
+    var isIE = function () {
+        if (!!window.ActiveXObject || "ActiveXObject" in window)
+            return true;
+        else
+            return false;
+    };
+    if (isIE()) return;
+
+    window.requestAnimationFrame = requestAnimationFrame || webkitRequestAnimationFrame || mozRequestAnimationFrame || msRequestAnimationFrame || oRequestAnimationFrame || null;
 
     window.troy = {};
 
@@ -56,6 +66,18 @@
         });
         return promise;
     };
+
+    /**
+     * 判断是否ie8及以下浏览器
+     * @return {Boolean} true - ie8及以下  false - 非ie或ie9及以上
+     */
+    troy.isIE8 = !-[1,];
+
+    /**
+     * 判断是否ie8及以下浏览器
+     * @return {Boolean} true - ie false - 非ie
+     */
+    troy.isIE = isIE;
 
     /**
      * 判断是否移动设备并返回设备种类

@@ -54,11 +54,15 @@
 //    alert(troy.deviceType());
 //    alert(troy.isWeixin());
 //http://s.dgtle.com/portal/201612/19/181740uco7tqptqdtxdewq.jpg?szhdl=imageview/2/w/680
-    var viewer = Pics({
+    var viewer = PicsActure({
         el: '.img-wrapper',
-        size: 200, // wrapper宽高
-        unit: 5, // 单位长度
-        scale: 1, // 装框/卡纸 比值
+        size: 200, // wrapper短边长度
+        frameWidth: 30, // 装框宽度
+        cardWidth: 60, // 卡纸宽度
+        imageSize: {
+            width: 1000,
+            height: 3000
+        }, // 图片实际打印尺寸
 
         imageURL: 'http://s.dgtle.com/portal/201612/19/181740uco7tqptqdtxdewq.jpg?szhdl=imageview/2/w/680', // 图片src
         cornerTopLeft: 'http://s.dgtle.com/portal/201612/14/163901qnvkhgvgkk657vh6.png',
