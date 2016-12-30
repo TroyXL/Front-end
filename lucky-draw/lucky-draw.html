@@ -120,11 +120,10 @@
             clearTimeout(timer);
             if (j < 9) {
                 timer = setTimeout(function () {
-//                    $animateItems.eq(j).addClass('animate'+j);
                     $animateItems.eq(j).animate({
                         'top': (100 - 100 * parseInt(j / 3)) + 'px',
                         'left': (100 - 100 * (j % 3)) + 'px'
-                    })
+                    });
                     j = j + 1;
                     showAnimateIn();
                 }, 50)
@@ -139,11 +138,10 @@
             clearTimeout(timer);
             if (k < 9) {
                 timer = setTimeout(function () {
-//                    $animateItems.eq(k).removeClass('animate'+k);
                     $animateItems.eq(k).animate({
                         'top': 0,
                         'left': 0
-                    })
+                    });
                     k = k + 1;
                     showAnimateOut();
                 }, 50)
