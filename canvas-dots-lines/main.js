@@ -52,7 +52,7 @@ var Main = function () {
         var tx = e.pageX,
             ty = e.pageY;
         if ((tx > 0 && tx < width) && (ty > 0 && ty < height)) {
-            dot.init(canvas, tx, ty);
+            dot.mouseDot(tx, ty);
         }
     };
 

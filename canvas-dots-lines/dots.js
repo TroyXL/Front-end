@@ -9,7 +9,6 @@ var Dots = function () {
     this.r;
     this.sx;
     this.sy;
-    this.ismouse = false;
 };
 
 Dots.prototype = {
@@ -17,7 +16,7 @@ Dots.prototype = {
         this.canvas = canvas;
         this.ctx = this.canvas.getContext('2d');
         this.x = x*2 || Math.random() * this.canvas.width;
-        this.y = y*2 || Math.random() * this.canvas.height;
+        this.y = y*2 || Math.random() * this.canvas.height; // *2 canvas画布尺寸是物理尺寸的2倍
         this.r = Math.random() * 4;
         this.sx = Math.random() * 4 - 2;
         this.sy = Math.random() * 4 - 2;
@@ -48,9 +47,11 @@ Dots.prototype = {
     },
 
     mouseDot: function (x, y) {
+        this.x = x*2;
+        this.y = y*2;
         this.ctx.beginPath();
         this.ctx.arc(this.x, this.y, this.r + 0.5, 0, 2*Math.PI);
-        this.ctx.fillStyle = "rgba(255,255,255,.8)";
+        this.ctx.fillStyle = "rgba(255,0,0,.8)";
         this.ctx.fill();
         this.ctx.closePath();
     }
