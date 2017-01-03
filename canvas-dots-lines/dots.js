@@ -45,5 +45,15 @@ Dots.prototype = {
         this.ctx.fillStyle = "rgba(255,255,255,.8)";
         this.ctx.fill();
         this.ctx.closePath();
+    },
+
+    mouseDot: function (x, y) {
+        this.ctx.beginPath();
+        this.ctx.arc(this.x, this.y, this.r + 0.5, 0, 2*Math.PI);
+        this.ctx.fillStyle = "rgba(255,255,255,.8)";
+        this.ctx.fill();
+        this.ctx.closePath();
     }
+
+
 };

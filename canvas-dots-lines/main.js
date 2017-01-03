@@ -7,13 +7,13 @@ var Main = function () {
         dotsNum = 0,
         maxDotsNum = 0,
         overNum = 0,
-        dotsDistance = 250;
+        dotsDistance = 250,
         bg = document.getElementById('bg'),
         canvas = document.getElementById('canvas'),
         ctx = canvas.getContext('2d'),
-        width = parseInt(window.screen.availWidth),
-        height = parseInt(window.screen.availHeight),
-        area = width * height;
+        width = parseInt(document.documentElement.clientWidth),
+        height = parseInt(document.documentElement.clientHeight),
+        area = width * height,
         cssText = 'width: '+width+'px; height: '+height+'px;';
 
     bg.setAttribute('style', cssText);
@@ -21,7 +21,7 @@ var Main = function () {
     canvas.width = (width * 2).toString();
     canvas.height = (height * 2).toString();
 
-    dotsNum = parseInt(area / 6000); console.log(dotsNum)
+    dotsNum = parseInt(area / 6000);
     maxDotsNum = dotsNum * 2;
 
     //生成点
@@ -36,7 +36,7 @@ var Main = function () {
     function createDot(e) {
         var tx = e.pageX,
             ty = e.pageY;
-        if ((tx > 0 && tx < (width)) && (ty > 0 && ty < (height))) {
+        if ((tx > 0 && tx < width) && (ty > 0 && ty < height)) {
 
             for (var i = 0; i < 5; i ++) {
                 var dot = new Dots();
@@ -46,17 +46,15 @@ var Main = function () {
             }
         }
     };
-    // document.addEventListener('mousemove', hoverDot);
-    // function hoverDot(e) {
-    //     var tx = e.pageX,
-    //         ty = e.pageY;
-    //     if ((tx > offsetLeft && tx < (offsetLeft + width)) && (ty > offsetTop && ty < (offsetTop + height))) {
-    //         var dot = new Dots();
-    //         dotsArr.push(dot);
-    //         dotsNum += 1;
-    //         dot.init(ctx, tx-offsetLeft, ty-offsetTop);
-    //     }
-    // };
+    document.addEventListener('mousemove', hoverDot);
+    function hoverDot(e) {
+
+        var tx = e.pageX,
+            ty = e.pageY;
+        if ((tx > 0 && tx < width) && (ty > 0 && ty < height)) {
+            dot.init(canvas, tx, ty);
+        }
+    };
 
     //动画与连线
     var requestAnimFrame = requestAnimationFrame || webkitRequestAnimationFrame || oRequestAnimationFrame || msRequestAnimationFrame;
