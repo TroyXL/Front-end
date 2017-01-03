@@ -2,35 +2,33 @@
  * Created by troyxu on 16/12/6.
  */
 var Main = function () {
-    //图片背景
-    var image = new Image(),
-        dotsArr = [],
-        dotsNum = 100,
-        maxDotsNum = 200,
+
+    var dotsArr = [],
+        dotsNum = 0,
+        maxDotsNum = 0,
         overNum = 0,
         dotsDistance = 250;
+        bg = document.getElementById('bg'),
         canvas = document.getElementById('canvas'),
-        ctxC = canvas.getContext('2d'),
-        dotsC = document.getElementById('dots'),
-        ctxD = dotsC.getContext('2d'),
-        offsetTop = canvas.offsetTop,
-        offsetLeft = canvas.offsetLeft,
-        width = dotsC.width/2,
-        height = dotsC.height/2;
+        ctx = canvas.getContext('2d'),
+        width = parseInt(window.screen.availWidth),
+        height = parseInt(window.screen.availHeight),
+        area = width * height;
+        cssText = 'width: '+width+'px; height: '+height+'px;';
 
-    //绘制背景图
-    image.onload = function () {
-        image.width = canvas.width;
-        image.height = canvas.height / canvas.width * image.width;
-        ctxC.drawImage(image, 0, 0, image.width, image.height);
-    };
-    image.src = 'http://oss.bayun.org/homepage/bg.jpg';
+    bg.setAttribute('style', cssText);
+    canvas.setAttribute('style', cssText);
+    canvas.width = (width * 2).toString();
+    canvas.height = (height * 2).toString();
+
+    dotsNum = parseInt(area / 6000); console.log(dotsNum)
+    maxDotsNum = dotsNum * 2;
 
     //生成点
     for (var i = 0; i < dotsNum; i ++) {
         var dot = new Dots();
         dotsArr.push(dot);
-        dot.init(ctxD);
+        dot.init(canvas);
     }
 
     //鼠标事件
@@ -38,13 +36,13 @@ var Main = function () {
     function createDot(e) {
         var tx = e.pageX,
             ty = e.pageY;
-        if ((tx > offsetLeft && tx < (offsetLeft + width)) && (ty > offsetTop && ty < (offsetTop + height))) {
+        if ((tx > 0 && tx < (width)) && (ty > 0 && ty < (height))) {
 
             for (var i = 0; i < 5; i ++) {
                 var dot = new Dots();
                 dotsArr.push(dot);
                 dotsNum += 1;
-                dot.init(ctxD, tx-offsetLeft, ty-offsetTop);
+                dot.init(canvas, tx, ty);
             }
         }
     };
@@ -56,7 +54,7 @@ var Main = function () {
     //         var dot = new Dots();
     //         dotsArr.push(dot);
     //         dotsNum += 1;
-    //         dot.init(ctxD, tx-offsetLeft, ty-offsetTop);
+    //         dot.init(ctx, tx-offsetLeft, ty-offsetTop);
     //     }
     // };
 
@@ -65,7 +63,7 @@ var Main = function () {
     requestAnimFrame(animateUpdate);
 
     function animateUpdate() {
-        ctxD.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         if (dotsNum > maxDotsNum) {
             overNum = dotsNum - maxDotsNum;
@@ -81,13 +79,13 @@ var Main = function () {
                     ty = dotsArr[i].y - dotsArr[j].y,
                     s = Math.sqrt(Math.pow(tx, 2) + Math.pow(ty, 2));
                 if (s < dotsDistance) {
-                    ctxD.beginPath();
-                    ctxD.moveTo(dotsArr[i].x, dotsArr[i].y);
-                    ctxD.lineTo(dotsArr[j].x, dotsArr[j].y);
-                    ctxD.strokeStyle = 'rgba(255,255,255,'+(dotsDistance-s)/dotsDistance+')';
-                    ctxD.strokeWidth = 1;
-                    ctxD.stroke();
-                    ctxD.closePath();
+                    ctx.beginPath();
+                    ctx.moveTo(dotsArr[i].x, dotsArr[i].y);
+                    ctx.lineTo(dotsArr[j].x, dotsArr[j].y);
+                    ctx.strokeStyle = 'rgba(255,255,255,'+(dotsDistance-s)/dotsDistance+')';
+                    ctx.strokeWidth = 1;
+                    ctx.stroke();
+                    ctx.closePath();
                 }
             }
         }

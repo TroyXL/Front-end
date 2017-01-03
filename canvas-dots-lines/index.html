@@ -8,23 +8,23 @@
 <body>
 
 <style>
-    canvas{
-        display: block;
-        width: 960px;
-        height: 540px;
-        margin: 30px auto;
+    *{margin: 0; padding: 0; box-sizing: border-box;}
+
+    #bg{
+        background: url(starsky.jpg) no-repeat;
+        background-size: cover;
+        background-position: center center;
     }
 
-    #dots{
+    #canvas{
         position: absolute;
         top: 0;
-        left: 50%;
-        margin-left: -480px;
+        left: 0;
     }
 </style>
 
-<canvas id="canvas" width="1920" height="1080"></canvas>
-<canvas id="dots" width="1920" height="1080"></canvas>
+<div id="bg"></div>
+<canvas id="canvas"></canvas>
 
 <script src="dots.js"></script>
 <script src="main.js"></script>

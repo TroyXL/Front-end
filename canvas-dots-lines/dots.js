@@ -2,6 +2,7 @@
  * Created by troyxu on 16/12/6.
  */
 var Dots = function () {
+    this.canvas;
     this.ctx;
     this.x;
     this.y;
@@ -12,13 +13,14 @@ var Dots = function () {
 };
 
 Dots.prototype = {
-    init: function (ctx, x, y) {
-        this.ctx = ctx;
-        this.x = x*2 || Math.random() * 1920;
-        this.y = y*2 || Math.random() * 1080;
+    init: function (canvas, x, y) {
+        this.canvas = canvas;
+        this.ctx = this.canvas.getContext('2d');
+        this.x = x*2 || Math.random() * this.canvas.width;
+        this.y = y*2 || Math.random() * this.canvas.height;
         this.r = Math.random() * 4;
-        this.sx = Math.random() * 6 - 3;
-        this.sy = Math.random() * 6 - 3;
+        this.sx = Math.random() * 4 - 2;
+        this.sy = Math.random() * 4 - 2;
 
         this.ctx.beginPath();
         this.ctx.arc(this.x, this.y, this.r + 0.5, 0, 2*Math.PI);
@@ -31,11 +33,11 @@ Dots.prototype = {
         this.x = this.x + this.sx;
         this.y = this.y + this.sy;
 
-        if (this.x < 0 || this.x > 1920) {
-            this.init(this.ctx);
+        if (this.x < 0 || this.x > this.canvas.width) {
+            this.init(this.canvas);
         }
-        if (this.y < 0 || this.y > 1080) {
-            this.init(this.ctx);
+        if (this.y < 0 || this.y > this.canvas.height) {
+            this.init(this.canvas);
         }
 
         this.ctx.beginPath();
