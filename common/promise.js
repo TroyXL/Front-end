@@ -79,3 +79,11 @@ Promise.prototype = {
     }
 };
 
+/**
+ * 挂载在 window.troy 下的Promise
+ * 也可单独使用
+ */
+troy.promise = function (fn) {
+    return new Promise(fn);
+}
+

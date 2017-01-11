@@ -91,7 +91,7 @@
 
 <br>
 
-<input type="text" id="text-input"> <input type="button" value="复制" id="copy-btn" onclick="clickCopyBtn()">
+<input type="text" id="text-input" value="12364qwewq7889"> <input type="button" value="复制" id="copy-btn" onclick="clickCopyBtn()">
 
 <style>
     .test-border-1{
@@ -111,8 +111,6 @@
 <div class="thinner-border-half test-border-1"></div>
 <div class="test-border-2" style="border-radius: 5px;"></div>
 
-<script src="promise.js"></script>
-
 <script>
 //    alert(troy.deviceType());
 //    alert(troy.isWeixin());
@@ -124,6 +122,26 @@ function clickCopyBtn() {
         console.log('复制失败')
     })
 }
+
+const p1 = new Promise((resolve, reject) => {
+    setTimeout(() => {
+        console.log('return p2', new Date())
+        resolve(p2)
+}, 3000);
+        })
+
+var p2 = new Promise((resolve, reject) => {
+    setTimeout(() => {
+        console.log('p2', new Date())
+//        resolve()
+}, 1000);
+        })
+
+p1.then(() => {
+    console.log('then')
+}).then(() => {
+    console.log('then second')
+})
 
 var div = document.getElementsByClassName('test-border-2')[0];
 div.style.cssText += 'background: #deafcb;'
@@ -172,28 +190,7 @@ emit.on('another2', function () {
 //emit.removeAllEmitter()
 //emit.printEmitters()
 
-    var p = new Promise(function () {
-        var self = this;
-        setTimeout(function () {
-            console.log('p1 5s')
-            self.resolve('test', 'args');
-        }, 5000);
-    });
-    p.then(function (err, data) {
-        var self = this;
-        console.log(data);
-        setTimeout(function () {
-            console.log('p1 success 2s p2');
-            self.reject();
-            console.log('p1 after reject fn');
-        }, 2000);
-    },function () {
-        var self = this;
-        setTimeout(function () {
-            console.log('p1 fail 2s p2');
-            self.reject();
-        }, 2000);
-    })
+
 
 </script>
 </body>
