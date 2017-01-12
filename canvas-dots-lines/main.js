@@ -6,21 +6,25 @@ var Main = function () {
     var dotsArr = [],
         dotsNum = 0,
         maxDotsNum = 0,
-        overNum = 0,
-        dotsDistance = 250,
+        overNum = 0, // 超出最大数量的点的数量
+        dotsDistance = 250, // 点之间产生连线的最大距离
+
         bg = document.getElementById('bg'),
         canvas = document.getElementById('canvas'),
         ctx = canvas.getContext('2d'),
+
         width = parseInt(document.documentElement.clientWidth),
         height = parseInt(document.documentElement.clientHeight),
-        area = width * height,
+        area = width * height, // canvas区域面积
         cssText = 'width: '+width+'px; height: '+height+'px;';
 
+    // 设置背景和canvas的宽高
     bg.setAttribute('style', cssText);
     canvas.setAttribute('style', cssText);
     canvas.width = (width * 2).toString();
     canvas.height = (height * 2).toString();
 
+    // 更具canvas面积动态确定初始化点的数量和最大数量
     dotsNum = parseInt(area / 6000);
     maxDotsNum = dotsNum * 2;
 
@@ -46,8 +50,8 @@ var Main = function () {
             }
         }
     };
-    document.addEventListener('mousemove', hoverDot);
-    function hoverDot(e) {
+    document.addEventListener('mousemove', moveDot);
+    function moveDot(e) {
 
         var tx = e.pageX,
             ty = e.pageY;
@@ -58,11 +62,12 @@ var Main = function () {
 
     //动画与连线
     var requestAnimFrame = requestAnimationFrame || webkitRequestAnimationFrame || oRequestAnimationFrame || msRequestAnimationFrame;
-    requestAnimFrame(animateUpdate);
+    requestAnimFrame(animateUpdate); // 兼容不同浏览器的requestAnimationFrame
 
     function animateUpdate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // 清空canvas中原有的内容
 
+        // 更新点的位置 数量超出最大值时舍弃旧的点
         if (dotsNum > maxDotsNum) {
             overNum = dotsNum - maxDotsNum;
         }
@@ -71,6 +76,7 @@ var Main = function () {
             dotsArr[i].update();
         }
 
+        // 绘制连线
         for (var i = overNum; i < dotsNum; i ++) {
             for (var j = i + 1; j < dotsNum; j ++) {
                 var tx = dotsArr[i].x - dotsArr[j].x,
@@ -90,9 +96,4 @@ var Main = function () {
 
         requestAnimFrame(animateUpdate);
     }
-
-
-
-
-
 }();
