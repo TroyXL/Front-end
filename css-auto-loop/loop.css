@@ -1,0 +1,53 @@
+.loop-wrap {
+    position: relative;
+    width: 500px;
+    height: 300px;
+    margin: 100px auto;
+    overflow: hidden;
+}
+
+.loop-images-container{
+    position: absolute;
+    left: 0; top: 0;
+    width: 500%;
+    height: 100%;
+    font-size: 0;
+    transform: translate(0,0);
+    animation: loop 10s linear infinite;
+}
+
+.loop-image{
+    width: 500px;
+    height: 300px;
+}
+
+/*
+animation: name duration timing-function delay iteration-count direction
+
+name: 动画名
+duration： 动画持续时间 设置为0则不执行
+timing-function：动画速度曲线
+delay：动画延迟开始时间 设置为0则不延迟
+iteration-count：动画循环次数 设置为infinite则无限次循环
+direction：是否应该轮流反向播放动画 normal 否 alternate 是
+*/
+
+/*轮播动画500ms，停留1500ms*/
+@keyframes loop {
+    0% {transform: translate(0,0);}
+    15% {transform: translate(0,0);}
+
+    20% {transform: translate(-20%,0);}
+    35% {transform: translate(-20%,0);}
+
+    40% {transform: translate(-40%,0);}
+    55% {transform: translate(-40%,0);}
+
+    60% {transform: translate(-60%,0);}
+    75% {transform: translate(-60%,0);}
+
+    80% {transform: translate(-80%,0);}
+    95% {transform: translate(-80%,0);}
+
+    100% {transform: translate(0,0);}
+}

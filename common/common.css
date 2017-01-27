@@ -344,12 +344,16 @@ html {
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box; }
+  box-sizing: border-box;
+  color: inherit; }
 
 a {
   color: inherit;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent; }
+  a:hover, a:focus, a:active, a:visited {
+    color: inherit;
+    text-decoration: none; }
 
 input, select, textarea {
   -webkit-appearance: none; }
@@ -359,6 +363,9 @@ textarea {
 
 input[type=submit], a {
   cursor: pointer; }
+
+input:focus {
+  outline: 0 !important; }
 
 .thinner-border-half {
   position: relative; }
