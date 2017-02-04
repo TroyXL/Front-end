@@ -43,6 +43,53 @@
 
 <script>
 
+    var a = 1;
+    console.assert(a>0, 'console断言方法','a小于1')
+
+    console.count()
+    console.count()
+    console.count('label1')
+    console.count('label1')
+    console.count('label1')
+    console.count('label2')
+    console.count('label2')
+    console.count('label2')
+    console.count('label2')
+
+    console.group('group1');
+    console.log('group1 log');
+    console.warn('group1 warn');
+    console.error('group1 error');
+    console.groupEnd();
+    console.group('group2');
+    console.log('group2 log');
+    console.warn('group2 warn');
+    console.error('group2 error');
+    console.groupEnd();
+
+    console.time('loop');
+    for (var i = 0; i < 100000; i ++) {}
+    console.timeEnd('loop');
+
+    console.profile('loop');
+    for (var i = 0; i < 100000; i ++) {}
+    console.profileEnd('loop');
+
+    var arr = [
+        {name: 'xiaoming', age: 17},
+        {name: 'xiaohong', age: 18},
+        {name: 'xiaogang', age: 19}
+    ];
+    console.table(arr);
+
+    function test(number) {
+        console.trace();
+        number += 1;
+    }
+    test(1);
+    test(3);
+    test(8);
+
 </script>
 
 
