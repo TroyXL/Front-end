@@ -5,14 +5,16 @@
  */
 ;(function () {
 
-    //
+    // 如果当前是ie浏览器 提示用户换浏览器使用
     var isIE = function () {
         if (!!window.ActiveXObject || "ActiveXObject" in window)
             return true;
         else
             return false;
     };
-    if (isIE()) return;
+    if (isIE()) {
+        alert('当前浏览器为IE浏览器，可能会导致部分功能无法正常使用，为了保证您的使用体验，请更换浏览器');
+    }
 
     window.requestAnimationFrame = requestAnimationFrame || webkitRequestAnimationFrame || mozRequestAnimationFrame || msRequestAnimationFrame || oRequestAnimationFrame || null;
 

@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="renderer" content="webkit">
+    <title>Xue</title>
+
+</head>
+<body>
+
+
+
+</body>
+
+<script src="vue.min.js"></script>
+
+<script>
+
+    var testVue = new Vue({
+        el: 'body',
+        data: {
+            person: {
+                name: 'testname',
+                age: 13
+            }
+        },
+        methods: {
+            show: function () {
+
+            }
+        },
+        ready: function () {
+            this.show()
+        }
+    })
+    console.log(testVue)
+
+    function Xue (data) {
+        this.$data
+        this.$methods
+
+        if (typeof data === 'object') {
+            this.$data = data.data
+            this.$methods = data.methods
+            this._walk(this.$data, data.data)
+
+            var key, val
+            for (key in this.$methods) {
+                val = this.$methods[key]
+                if (typeof val === 'function') {
+                    val.apply(this)
+                }
+            }
+
+            data.ready.apply(this)
+        }
+
+    }
+
+    Xue.prototype = {
+        constructor: Xue,
+
+        _walk: function (scope, data) {
+            var val
+            for (var key in data) {
+                if (data.hasOwnProperty(key)) {
+                    val = data[key]
+                    if (typeof val === 'object') {
+                        this._walk(val, val)
+                    }
+                    this._watch(scope, key, val)
+                }
+            }
+        },
+
+        _watch: function (scope, key, val) {
+            Object.defineProperty(scope, key, {
+                enumerable: true,
+                configurable: true,
+                get: function () {
+                    console.log('get ' + key, val)
+                    return val
+                },
+                set: function (newVal) {
+                    console.log('set ' + key, newVal, val)
+                    if (val !== newVal) val = newVal
+                }
+            })
+        }
+
+    }
+
+
+    var test = new Xue ({
+
+
+        data: {
+            person: {
+                name: 'Troy',
+                age: '24'
+            }
+        },
+        methods: {
+            addAttr: function (name) {
+                console.log(this, this.$data)
+            }
+        },
+        ready: function () {
+            console.log(this.$methods.addAttr())
+        }
+
+    })
+
+    console.log(test)
+
+
+</script>
+</html>
