@@ -277,7 +277,10 @@
             r2 = 0
         }
         m = Math.pow(10, Math.max(r1, r2));
-        return (arg1 * m + arg2 * m) / m
+
+        // return (arg1 * m + arg2 * m) / m
+        /*由于测试 266.4+0.01 时有问题 ,在加法上再用了乘法(原因是266.4*100计算错误)*/
+        return (troy.accMul(arg1,m)+troy.accMul(arg2,m)) / m
     };
 
     /**
