@@ -13,6 +13,9 @@
 </head>
 <body>
 
+<p>{{name}}</p>
+<p>{{age}}</p>
+
 
 
 </body>
@@ -21,24 +24,22 @@
 
 <script>
 
-    var testVue = new Vue({
+    var sss = new Vue({
         el: 'body',
-        data: {
-            person: {
-                name: 'testname',
-                age: 13
-            }
-        },
         methods: {
-            show: function () {
-
+            fun: function () {
+                alert('sss')
             }
         },
         ready: function () {
-            this.show()
         }
     })
-    console.log(testVue)
+    function fun() {
+
+    }
+    console.log(sss, fun.prototype)
+
+
 
     function Xue (data) {
         this.$data
@@ -48,16 +49,9 @@
             this.$data = data.data
             this.$methods = data.methods
             this._walk(this.$data, data.data)
+            this._converseFun()
 
-            var key, val
-            for (key in this.$methods) {
-                val = this.$methods[key]
-                if (typeof val === 'function') {
-                    val.apply(this)
-                }
-            }
-
-            data.ready.apply(this)
+            data.ready.call(this);
         }
 
     }
@@ -91,27 +85,42 @@
                     if (val !== newVal) val = newVal
                 }
             })
+        },
+
+        _converseFun: function () {
+            var key, val, self = this;
+            for (key in this.$methods) {
+                val = this.$methods[key]
+                if (typeof val === 'function') {
+                    this.$methods[key] = function (i) {
+                        var length = arguments.length;
+                        length?
+                                length > 1 ? val.apply(self, arguments) : val.call(self, i)
+                                : val.call(self)
+                    }
+                }
+            }
         }
+
+
 
     }
 
 
     var test = new Xue ({
-
-
+        el: 'body',
         data: {
-            person: {
-                name: 'Troy',
-                age: '24'
-            }
+            name: 'Troy',
+            age: '24'
         },
         methods: {
             addAttr: function (name) {
-                console.log(this, this.$data)
+                console.log(name)
+                this.$data.name = name;
             }
         },
         ready: function () {
-            console.log(this.$methods.addAttr())
+            this.$methods.addAttr('Xiaoming')
         }
 
     })
