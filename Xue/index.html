@@ -13,45 +13,45 @@
 </head>
 <body>
 
-<p>{{name}}</p>
+<div>{{name}}</div>
 <p>{{age}}</p>
 
 
 
 </body>
 
-<script src="vue.min.js"></script>
+<!--<script src="vue.min.js"></script>-->
 
 <script>
 
-    var sss = new Vue({
-        el: 'body',
-        methods: {
-            fun: function () {
-                alert('sss')
-            }
-        },
-        ready: function () {
-        }
-    })
-    function fun() {
-
-    }
-    console.log(sss, fun.prototype)
-
-
+//    var sss = new Vue({
+//        el: 'body',
+//        methods: {
+//            fun: function () {
+//                alert('sss')
+//            }
+//        },
+//        ready: function () {
+//        }
+//    })
+    //    console.log(sss)
 
     function Xue (data) {
+        this.$el = document.querySelector(data.el)
         this.$data
         this.$methods
+        this.$directives = []
+
+
 
         if (typeof data === 'object') {
             this.$data = data.data
             this.$methods = data.methods
             this._walk(this.$data, data.data)
             this._converseFun()
+            this._compileNode(this.$el)
 
-            data.ready.call(this);
+            data.ready.call(this)
         }
 
     }
@@ -93,18 +93,81 @@
                 val = this.$methods[key]
                 if (typeof val === 'function') {
                     this.$methods[key] = function (i) {
-                        var length = arguments.length;
+                        var length = arguments.length
                         length?
                                 length > 1 ? val.apply(self, arguments) : val.call(self, i)
                                 : val.call(self)
                     }
                 }
             }
+        },
+
+        _compileNode: function (node) {
+            switch (node.nodeType) {
+
+                case 1:// node
+                    this._compileElement(node)
+                    break
+
+                case 3 :// text
+                    this._compileText(node)
+                    break
+                default:
+                    return
+            }
+        },
+
+        _compileElement: function (node) {
+            if (node.hasChildNodes()) {
+                Array.from(node.childNodes).forEach(this._compileNode, this)
+            }
+        },
+
+        _compileText: function (node) {
+            var patt = /{{\w+}}/g
+            var nodeValue = node.nodeValue
+            var expressions = nodeValue.match(patt) // 这是一个数组,形如["{{name}}"];
+
+            if (!expressions) return
+
+            var self = this
+            expressions.forEach(function (expression) {
+                var el = document.createTextNode('')
+                node.parentNode.insertBefore(el, node)
+                var property = expression.replace(/[{}]/g, '')
+                self._bindDirective('text', property, el)
+            })
+
+            node.parentNode.removeChild(node);
+        },
+
+        _bindDirective: function (name, expression, node) {
+            var dirs = this.$directives;
+            dirs.push(
+                    new Directive(name, node, this, expression)
+            );
+            console.log(dirs)
         }
 
 
 
     }
+
+    function Directive(name, el, vm, expression) {
+        this.name = name
+        this.el = el
+        this.vm = vm
+        this.expression = expression
+        this.attr = 'nodeValue'
+
+        this.update()
+    }
+
+    Directive.prototype.update = function () {
+        console.log(this.vm)
+        this.el[this.attr] = this.vm.$data[this.expression]
+        console.log(`更新了DOM-${this.expression}`)
+    };
 
 
     var test = new Xue ({
@@ -115,8 +178,8 @@
         },
         methods: {
             addAttr: function (name) {
-                console.log(name)
-                this.$data.name = name;
+//                console.log(name)
+//                this.$data.name = name
             }
         },
         ready: function () {
