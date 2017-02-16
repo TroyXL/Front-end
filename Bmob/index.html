@@ -3,9 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <title>Bmob</title>
+    <meta content="modeName=750-12" name="grid">
+    <script src="flexible.js"></script>
     <script src="bmob-min.js"></script>
 </head>
 <body>
+
+<style>
+    .test{
+        height: 100px;
+        margin-bottom: 1rem;
+        background: #deaefc;
+    }
+    .test2{
+        height: 100px;
+        margin-bottom: 1rem;
+        background: #deaaaa;
+    }
+</style>
+
+<div class="grid container">
+    <div class="col-9 test">
+        <div class="grid">
+            <div class="col-4 test2"></div>
+            <div class="col-4 test2"></div>
+            <div class="col-4 test2"></div>
+        </div>
+    </div>
+    <div class="col-3 test"></div>
+</div>
 
 <script>
     Bmob.initialize("4f2043b74ffdcd98db97d3858be91518", "ab4b8936334d405df5bcf6cdf2e62f3f");
