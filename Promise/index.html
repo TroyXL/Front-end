@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Promise</title>
+</head>
+<body>
+
+<script>
+
+    var deepCopy = function( extendObj ){
+        var str, newObj = extendObj.constructor === Array ? [] : {};
+        if(typeof extendObj !== 'object'){
+            return;
+        } else if(window.JSON){
+            str = JSON.stringify(extendObj);
+            newObj = JSON.parse(str);
+        } else {
+            for(var key in extendObj){
+                if (!extendObj.hasOwnProperty(key)) return;
+                newObj[key] = typeof extendObj[key] === 'object' ?
+                        cloneObj(extendObj[key]) : extendObj[key];
+            }
+        }
+        return newObj;
+    };
+
+    var obj2 = {
+        names: ['test0', 'test1', 'test3']
+    }
+
+    var obj1 = deepCopy( obj2 );
+
+    console.log( obj1, obj2 );
+
+    obj2.names[1] = 'test0';
+
+    console.log( obj1, obj2 );
+
+
+
+</script>
+
+</body>
+</html>
