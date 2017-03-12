@@ -46,24 +46,19 @@
 
 <script>
 
-    function* generator1() {
-        yield 'a';
-        yield 'b';
-        return 'c';
-    };
-    function* generator2() {
-        yield 1;
-        var res = yield* generator1();
-        console.log(res);
-        yield 2;
-    };
+    function superClass () {
+        this.a = 1;
+        this.print = function () {
+            console.log(this.a);
+        }
+    }
 
-    var g = generator2();
-    console.log(g.next());
-    console.log(g.next());
-    console.log(g.next());
-    console.log(g.next());
+    function subClass () {
+        superClass.call(this);
+        this.print();
+    }
 
+    subClass();
 
 
 </script>
