@@ -46,19 +46,21 @@
 
 <script>
 
-    function superClass () {
-        this.a = 1;
-        this.print = function () {
-            console.log(this.a);
-        }
-    }
 
-    function subClass () {
-        superClass.call(this);
-        this.print();
-    }
+setTimeout(function test1() {
+    var a = 1;
+    console.log(a);
+}, 0)
 
-    subClass();
+function test2() {
+    var b = 1;
+    console.log(b);
+}
+
+setTimeout(test2.toString(), 0)
+
+
+
 
 
 </script>
