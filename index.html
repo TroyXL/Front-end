@@ -46,18 +46,51 @@
 
 <script>
 
+    function test1() {
+        console.log('this is function --- test1');
+    }
 
-setTimeout(function test1() {
-    var a = 1;
-    console.log(a);
-}, 0)
+    function test2(a,b) {
+        console.log('this is function --- test2',a,b);
+    }
 
-function test2() {
-    var b = 1;
-    console.log(b);
-}
+    var once = function() {
+        var hasRan = [];
+        return function ( fn ) {
+            if (typeof fn !== 'function')
+                return new Error('FunctionTypeError');
 
-setTimeout(test2.toString(), 0)
+            for (var i in hasRan) {
+//                console.log(hasRan[i].func.toString())
+//                console.log(fn.toString())
+                if (hasRan[i].func.toString() === fn.toString()) {
+                    return hasRan[i].result;
+                }
+            }
+            var argumentsArr = [];
+            for (var idx in arguments) {
+                if (idx==0) continue;
+                argumentsArr.push(arguments[idx]);
+            }
+            var result = fn.apply(this, argumentsArr);
+            hasRan.push({
+                func: fn,
+                result: result
+            });
+            return result;
+        }
+    }();
+
+    once(test1);
+    once(test1);
+    once(test2,1,2);
+    once(test2,1,2);
+
+
+
+
+
+
 
 
 
