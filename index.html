@@ -46,37 +46,25 @@
 
 <script>
 
-    function typeOf(item) {
-        if (arguments.length != 1) throw new Error('must given one argument')
+var isIE = false
 
-        var type = typeof item
+    var showVedio = function () {
+        console.log('第一次调用 showVedio')
 
-        // 判断是否为空
-        if (!item) {
-            return type === 'number' ? 'number' :
-                        type === 'string' ? 'string' :
-                             type === 'boolean' ? 'boolean' :
-                                  type === 'undefined' ? 'undefined' : 'null'
+        if (isIE) {
+            return function () {
+                console.log('在 IE 中调用 showVedio')
+            }
+        } else {
+            return function () {
+                console.log('在 非IE 中国调用 showVedio')
+            }
         }
+    }()
 
-        // 判断是否为 object
-        return type !== 'object' ? type :
-            // 判断是数组还是对象
-            (item instanceof Array) ? 'array' : 'object'
-    }
-
-    console.log(typeOf(0))
-    console.log(typeOf(1))
-    console.log(typeOf(''))
-    console.log(typeOf('sss'))
-    console.log(typeOf(true))
-    console.log(typeOf(false))
-    console.log(typeOf([]))
-    console.log(typeOf({}))
-    console.log(typeOf(null))
-    console.log(typeOf(undefined))
-    console.log(typeOf(function(){}))
-
+    showVedio();
+    showVedio();
+    showVedio();
 
 
 
