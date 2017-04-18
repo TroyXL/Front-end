@@ -46,19 +46,10 @@
 
 <script>
 
+    var once = function ( fn ) {
+        if (!isFunction( fn )) return new Error('FunctionTypeError');
 
-setTimeout(function test1() {
-    var a = 1;
-    console.log(a);
-}, 0)
-
-function test2() {
-    var b = 1;
-    console.log(b);
-}
-
-setTimeout(test2.toString(), 0)
-
+    }
 
 
 
