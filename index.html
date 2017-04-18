@@ -46,10 +46,26 @@
 
 <script>
 
-    var once = function ( fn ) {
-        if (!isFunction( fn )) return new Error('FunctionTypeError');
 
-    }
+var isIE = false
+
+    var showVedio = function () {
+        console.log('第一次调用 showVedio')
+
+        if (isIE) {
+            return function () {
+                console.log('在 IE 中调用 showVedio')
+            }
+        } else {
+            return function () {
+                console.log('在 非IE 中国调用 showVedio')
+            }
+        }
+    }()
+
+    showVedio();
+    showVedio();
+    showVedio();
 
 
 
