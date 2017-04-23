@@ -23,40 +23,87 @@
 <script src="vue.min.js"></script>
 
 <script>
+
+    var v = new Vue({
+        el: 'body',
+        data: {
+            person: {
+                name: 1
+            }
+        }
+    })
+
      function Lue(opts) {
-         // 声明一个变量 $data 用来就收 opts.data
-         // $data 并不是必须的 ：）你高兴就好
-         var $data, dataType = typeof opts.data
+         this.$data = {}
 
-         // 简单校验 opts.data 的类型
-         if (dataType === 'function') {
-             $data = opts.data()
-         } else if (dataType === 'object') {
-             $data = opts.data
+         if (typeof opts.data === 'object') {
+             // 需要将 opts.data 的数据绑定到 $data 上，所以目标对象为 $data，源对象为 opts.data
+             this._each(this.$data, opts.data)
          }
-
-         // 简单粗暴的将 $data 的属性绑定到 this 上
-         for (var key in $data) {
-             this[key] = $data[key]
-         }
-
-
 
          if (typeof opts.ready === 'function') {
              opts.ready.call(this)
          }
      }
 
+     Lue.prototype = {
+         constructor: Lue,
+
+         /**
+          * 遍历深层数据对象
+          * @param aimObj 需要被绑定到的目标对象
+          * @param sourceObj 源对象
+          * @private
+          */
+         _each: function (aimObj, sourceObj) {
+             var value
+             for (var key in sourceObj) {
+                 value = sourceObj[key]
+                 // 当遍历到的属性值是个对象时，对该对象再次进行遍历，此时目标对象和源对象相同，不需要改变 value 上属性所绑定的对象
+                 if (typeof value === 'object') {
+                     this._each(value, value)
+                 }
+                 // 当该属性值不为对象时，进行数据绑定
+                 this._bindData(aimObj, key, value)
+             }
+         },
+
+         _bindData: function (obj, key, val) {
+             var self = this
+             Object.defineProperty(obj, key, {
+                 enumerable: true, // 是否可枚举
+                 configurable: true, // 是否可删除
+                 get: function () {
+                     console.log('get', key, val)
+                     return val
+                 },
+                 set: function (newVal) {
+                     console.log('set', key, newVal)
+                     if (val !== newVal) val = newVal
+                     // 设置属性为对象时执行 添加属性时并不会执行
+                     if (typeof newVal == 'object') self._each(newVal, newVal)
+                 }
+             })
+         }
+     }
+
      var l = new Lue({
          data: {
-             name: 'xiaohong',
-             age: 17
+             person: {
+                 name: 'xiaohong',
+                 age: 17
+             }
          },
          ready: function () {
-             console.log(this,this.name)
-             console.log(this.age)
+             console.log(this.$data.person.name)
+             console.log(this.$data.person.age)
+             this.$data.person.name = 'ligang'
+             this.$data.person.age = 99
+
+             this.$data.person.sex = 1
          }
      })
+
 
 
 //    var sss = new Vue({
@@ -181,7 +228,7 @@
             dirs.push(
                     new Directive(name, node, this, expression)
             );
-            console.log(dirs)
+//            console.log(dirs)
         }
 
 
@@ -199,30 +246,32 @@
     }
 
     Directive.prototype.update = function () {
-        console.log(this.vm)
+//        console.log(this.vm)
         this.el[this.attr] = this.vm.$data[this.expression]
-        console.log(`更新了DOM-${this.expression}`)
+//        console.log(`更新了DOM-${this.expression}`)
     };
 
 
-//    var test = new Xue ({
-//        el: 'body',
-//        data: {
-//            name: 'Troy',
-//            age: '24'
-//        },
-//        methods: {
-//            addAttr: function (name) {
-////                console.log(name)
-////                this.$data.name = name
-//            }
-//        },
-//        ready: function () {
-//            this.$methods.addAttr('Xiaoming')
-//        }
-//
-//    })
-//
+    var test = new Xue ({
+        el: 'body',
+        data: {
+            tom: {
+                name: 'Troy',
+                age: '24'
+            }
+        },
+        methods: {
+            addAttr: function (name) {
+//                console.log(name)
+//                this.$data.name = name
+            }
+        },
+        ready: function () {
+            this.$methods.addAttr('Xiaoming')
+        }
+
+    })
+
 //    console.log(test)
 
 
