@@ -41,9 +41,19 @@
              this._each(this.$data, opts.data)
          }
 
+         this.$methods = {}
+         if (typeof opts.methods === 'object') {
+             this._bindMethods(opts.methods)
+         }
+         if (typeof opts.methods === 'function' && typeof opts.methods() === 'object') {
+             this._bindMethods(opts.methods())
+         }
+
          if (typeof opts.ready === 'function') {
              opts.ready.call(this)
          }
+
+
      }
 
      Lue.prototype = {
@@ -84,23 +94,31 @@
                      if (typeof newVal == 'object') self._each(newVal, newVal)
                  }
              })
+         },
+
+         _bindMethods: function (obj) {
+             var self = this
+             for (var key in obj) {
+                 var val = obj[key]
+                 if (typeof val === 'function') {
+                     this.$methods[key] = function (arg) {
+                         var length = arguments.length
+                         length ? length > 1 ? val.apply(self, arguments) : val.call(self, arg)
+                                 : val.call(self)
+                     }
+                 }
+             }
          }
      }
 
      var l = new Lue({
-         data: {
-             person: {
-                 name: 'xiaohong',
-                 age: 17
+         methods: {
+             init: function () {
+                 console.log(this)
              }
          },
          ready: function () {
-             console.log(this.$data.person.name)
-             console.log(this.$data.person.age)
-             this.$data.person.name = 'ligang'
-             this.$data.person.age = 99
-
-             this.$data.person.sex = 1
+             this.$methods.init()
          }
      })
 
