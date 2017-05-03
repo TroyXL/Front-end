@@ -23,52 +23,52 @@
 <script src="vue.min.js"></script>
 
 <script>
-     function Lue(opts) {
-         // 声明一个变量 $data 用来就收 opts.data
-         // $data 并不是必须的 ：）你高兴就好
-         var $data, dataType = typeof opts.data
+    function Lue(opts) {
+        // 声明一个变量 $data 用来就收 opts.data
+        // $data 并不是必须的 ：）你高兴就好
+        var $data, dataType = typeof opts.data
 
-         // 简单校验 opts.data 的类型
-         if (dataType === 'function') {
-             $data = opts.data()
-         } else if (dataType === 'object') {
-             $data = opts.data
-         }
+        // 简单校验 opts.data 的类型
+        if (dataType === 'function') {
+            $data = opts.data()
+        } else if (dataType === 'object') {
+            $data = opts.data
+        }
 
-         // 简单粗暴的将 $data 的属性绑定到 this 上
-         for (var key in $data) {
-             this[key] = $data[key]
-         }
-
-
-
-         if (typeof opts.ready === 'function') {
-             opts.ready.call(this)
-         }
-     }
-
-     var l = new Lue({
-         data: {
-             name: 'xiaohong',
-             age: 17
-         },
-         ready: function () {
-             console.log(this,this.name)
-             console.log(this.age)
-         }
-     })
+        // 简单粗暴的将 $data 的属性绑定到 this 上
+        for (var key in $data) {
+            this[key] = $data[key]
+        }
 
 
-//    var sss = new Vue({
-//        el: 'body',
-//        methods: {
-//            fun: function () {
-//                alert('sss')
-//            }
-//        },
-//        ready: function () {
-//        }
-//    })
+
+        if (typeof opts.ready === 'function') {
+            opts.ready.call(this)
+        }
+    }
+
+    var l = new Lue({
+        data: {
+            name: 'xiaohong',
+            age: 17
+        },
+        ready: function () {
+            console.log(this,this.name)
+            console.log(this.age)
+        }
+    })
+
+
+    //    var sss = new Vue({
+    //        el: 'body',
+    //        methods: {
+    //            fun: function () {
+    //                alert('sss')
+    //            }
+    //        },
+    //        ready: function () {
+    //        }
+    //    })
     //    console.log(sss)
 
     function Xue (data) {
@@ -230,8 +230,8 @@
         }
 
     })
-//
-//    console.log(test)
+    //
+    //    console.log(test)
 
 
 </script>
