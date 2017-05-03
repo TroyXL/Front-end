@@ -154,6 +154,7 @@
 
         _compileElement: function (node) {
             if (node.hasChildNodes()) {
+                // forEach 的第二个参数可选 指明当前回调函数作用时 this 的值
                 Array.from(node.childNodes).forEach(this._compileNode, this)
             }
         },
@@ -168,11 +169,18 @@
             var self = this
             expressions.forEach(function (expression) {
                 var el = document.createTextNode('')
+                // 插入替换节点到原节点之前
                 node.parentNode.insertBefore(el, node)
+                // 匹配出对应的数据
                 var property = expression.replace(/[{}]/g, '')
-                self._bindDirective('text', property, el)
+                // 将替换节点的值替换为对应的数据
+                el.nodeValue = self.$data[property]
+
+                // 绑定指令节点 暂时不用
+//                self._bindDirective('text', property, el)
             })
 
+            // 移除原节点
             node.parentNode.removeChild(node);
         },
 
@@ -205,23 +213,23 @@
     };
 
 
-//    var test = new Xue ({
-//        el: 'body',
-//        data: {
-//            name: 'Troy',
-//            age: '24'
-//        },
-//        methods: {
-//            addAttr: function (name) {
-////                console.log(name)
-////                this.$data.name = name
-//            }
-//        },
-//        ready: function () {
-//            this.$methods.addAttr('Xiaoming')
-//        }
-//
-//    })
+    var test = new Xue ({
+        el: 'body',
+        data: {
+            name: 'Troy',
+            age: '24'
+        },
+        methods: {
+            addAttr: function (name) {
+//                console.log(name)
+//                this.$data.name = name
+            }
+        },
+        ready: function () {
+            this.$methods.addAttr('Xiaoming')
+        }
+
+    })
 //
 //    console.log(test)
 
