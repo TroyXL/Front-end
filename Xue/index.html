@@ -11,10 +11,13 @@
     <title>Xue</title>
 
 </head>
-<body id="page">
+<body>
 
-<div>{{name}}</div>
-<p>{{age}}</p>
+<div id="page">
+    <div>{{name}}</div>
+    <p>{{age}}</p>
+</div>
+
 
 
 
@@ -23,6 +26,14 @@
 <script src="vue.min.js"></script>
 
 <script>
+//    var vue = new Vue ({
+//        el: '#page',
+//        data: {
+//            name: 1,
+//            age: 2
+//        }
+//    })
+
     function Lue(opts) {
         // 声明一个变量 $data 用来就收 opts.data
         // $data 并不是必须的 ：）你高兴就好
@@ -47,30 +58,6 @@
         }
     }
 
-    var l = new Lue({
-        data: {
-            name: 'xiaohong',
-            age: 17
-        },
-        ready: function () {
-            console.log(this,this.name)
-            console.log(this.age)
-        }
-    })
-
-
-    //    var sss = new Vue({
-    //        el: 'body',
-    //        methods: {
-    //            fun: function () {
-    //                alert('sss')
-    //            }
-    //        },
-    //        ready: function () {
-    //        }
-    //    })
-    //    console.log(sss)
-
     function Xue (data) {
         this.$el = document.querySelector(data.el)
         this.$data
@@ -82,9 +69,10 @@
         if (typeof data === 'object') {
             this.$data = data.data
             this.$methods = data.methods
+            this._compileNode(this.$el)
             this._walk(this.$data, data.data)
             this._converseFun()
-            this._compileNode(this.$el)
+
 
             data.ready.call(this)
         }
@@ -108,6 +96,14 @@
         },
 
         _watch: function (scope, key, val) {
+            var directive
+            for (var i = 0; i < this.$directives.length; i ++) {
+                if (this.$directives[i].expression === key) {
+                    directive = this.$directives[i]
+                }
+            }
+            console.info(directive)
+
             Object.defineProperty(scope, key, {
                 enumerable: true,
                 configurable: true,
@@ -117,7 +113,10 @@
                 },
                 set: function (newVal) {
                     console.log('set ' + key, newVal, val)
-                    if (val !== newVal) val = newVal
+                    if (val !== newVal) {
+                        val = newVal
+                        directive.update(val)
+                    }
                 }
             })
         },
@@ -167,6 +166,7 @@
             if (!expressions) return
 
             var self = this
+            console.log(node)
             expressions.forEach(function (expression) {
                 var el = document.createTextNode('')
                 // 插入替换节点到原节点之前
@@ -174,10 +174,10 @@
                 // 匹配出对应的数据
                 var property = expression.replace(/[{}]/g, '')
                 // 将替换节点的值替换为对应的数据
-                el.nodeValue = self.$data[property]
+//                el.nodeValue = self.$data[property]
 
-                // 绑定指令节点 暂时不用
-//                self._bindDirective('text', property, el)
+                // 绑定指令节点
+                self._bindDirective('text', property, el)
             })
 
             // 移除原节点
@@ -206,15 +206,19 @@
         this.update()
     }
 
-    Directive.prototype.update = function () {
-        console.log(this.vm)
-        this.el[this.attr] = this.vm.$data[this.expression]
+    Directive.prototype.update = function (val) {
+        console.log('------', this.el, this.el[this.attr])
+        if (val) {
+            this.el[this.attr] = val
+        } else {
+            this.el[this.attr] = this.vm.$data[this.expression]
+        }
+
         console.log(`更新了DOM-${this.expression}`)
     };
 
-
     var test = new Xue ({
-        el: 'body',
+        el: '#page',
         data: {
             name: 'Troy',
             age: '24'
@@ -230,8 +234,6 @@
         }
 
     })
-    //
-    //    console.log(test)
 
 
 </script>
