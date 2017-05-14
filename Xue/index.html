@@ -24,217 +24,27 @@
 </body>
 
 <script src="vue.min.js"></script>
+<script src="Lue.js"></script>
 
 <script>
-//    var vue = new Vue ({
-//        el: '#page',
-//        data: {
-//            name: 1,
-//            age: 2
-//        }
-//    })
-
-    function Lue(opts) {
-        // 声明一个变量 $data 用来就收 opts.data
-        // $data 并不是必须的 ：）你高兴就好
-        var $data, dataType = typeof opts.data
-
-        // 简单校验 opts.data 的类型
-        if (dataType === 'function') {
-            $data = opts.data()
-        } else if (dataType === 'object') {
-            $data = opts.data
-        }
-
-        // 简单粗暴的将 $data 的属性绑定到 this 上
-        for (var key in $data) {
-            this[key] = $data[key]
-        }
-
-
-
-        if (typeof opts.ready === 'function') {
-            opts.ready.call(this)
-        }
-    }
-
-    function Xue (data) {
-        this.$el = document.querySelector(data.el)
-        this.$data
-        this.$methods
-        this.$directives = []
-
-
-
-        if (typeof data === 'object') {
-            this.$data = data.data
-            this.$methods = data.methods
-            this._compileNode(this.$el)
-            this._walk(this.$data, data.data)
-            this._converseFun()
-
-
-            data.ready.call(this)
-        }
-
-    }
-
-    Xue.prototype = {
-        constructor: Xue,
-
-        _walk: function (scope, data) {
-            var val
-            for (var key in data) {
-                if (data.hasOwnProperty(key)) {
-                    val = data[key]
-                    if (typeof val === 'object') {
-                        this._walk(val, val)
-                    }
-                    this._watch(scope, key, val)
-                }
-            }
-        },
-
-        _watch: function (scope, key, val) {
-            var directive
-            for (var i = 0; i < this.$directives.length; i ++) {
-                if (this.$directives[i].expression === key) {
-                    directive = this.$directives[i]
-                }
-            }
-            console.info(directive)
-
-            Object.defineProperty(scope, key, {
-                enumerable: true,
-                configurable: true,
-                get: function () {
-                    console.log('get ' + key, val)
-                    return val
-                },
-                set: function (newVal) {
-                    console.log('set ' + key, newVal, val)
-                    if (val !== newVal) {
-                        val = newVal
-                        directive.update(val)
-                    }
-                }
-            })
-        },
-
-        _converseFun: function () {
-            var key, val, self = this;
-            for (key in this.$methods) {
-                val = this.$methods[key]
-                if (typeof val === 'function') {
-                    this.$methods[key] = function (i) {
-                        var length = arguments.length
-                        length?
-                                length > 1 ? val.apply(self, arguments) : val.call(self, i)
-                                : val.call(self)
-                    }
-                }
-            }
-        },
-
-        _compileNode: function (node) {
-            switch (node.nodeType) {
-
-                case 1:// node
-                    this._compileElement(node)
-                    break
-
-                case 3 :// text
-                    this._compileText(node)
-                    break
-                default:
-                    return
-            }
-        },
-
-        _compileElement: function (node) {
-            if (node.hasChildNodes()) {
-                // forEach 的第二个参数可选 指明当前回调函数作用时 this 的值
-                Array.from(node.childNodes).forEach(this._compileNode, this)
-            }
-        },
-
-        _compileText: function (node) {
-            var patt = /{{\w+}}/g
-            var nodeValue = node.nodeValue
-            var expressions = nodeValue.match(patt) // 这是一个数组,形如["{{name}}"];
-
-            if (!expressions) return
-
-            var self = this
-            console.log(node)
-            expressions.forEach(function (expression) {
-                var el = document.createTextNode('')
-                // 插入替换节点到原节点之前
-                node.parentNode.insertBefore(el, node)
-                // 匹配出对应的数据
-                var property = expression.replace(/[{}]/g, '')
-                // 将替换节点的值替换为对应的数据
-//                el.nodeValue = self.$data[property]
-
-                // 绑定指令节点
-                self._bindDirective('text', property, el)
-            })
-
-            // 移除原节点
-            node.parentNode.removeChild(node);
-        },
-
-        _bindDirective: function (name, expression, node) {
-            var dirs = this.$directives;
-            dirs.push(
-                    new Directive(name, node, this, expression)
-            );
-            console.log(dirs)
-        }
-
-
-
-    }
-
-    function Directive(name, el, vm, expression) {
-        this.name = name
-        this.el = el
-        this.vm = vm
-        this.expression = expression
-        this.attr = 'nodeValue'
-
-        this.update()
-    }
-
-    Directive.prototype.update = function (val) {
-        console.log('------', this.el, this.el[this.attr])
-        if (val) {
-            this.el[this.attr] = val
-        } else {
-            this.el[this.attr] = this.vm.$data[this.expression]
-        }
-
-        console.log(`更新了DOM-${this.expression}`)
-    };
-
-    var test = new Xue ({
+    var l = new Lue({
         el: '#page',
         data: {
-            name: 'Troy',
-            age: '24'
+            name: 'xiaoming',
+            age: 17
         },
         methods: {
-            addAttr: function (name) {
-//                console.log(name)
-//                this.$data.name = name
+            changeName: function () {
+                this.$data.name = 'xiaohong'
             }
         },
         ready: function () {
-            this.$methods.addAttr('Xiaoming')
+            var self = this
+            setTimeout(function () {
+                self.$data.age = 7
+                self.$methods.changeName()
+            }, 3000)
         }
-
     })
-
-
 </script>
 </html>
