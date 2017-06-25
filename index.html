@@ -36,48 +36,12 @@
     </li>
     <li>
         <a href="Lue/index.html">Lue.html</a>
+    </li>
 </ul>
-
-
-<style>
-    #text-div {
-        width: 200px;
-        height: 100px;
-        border: 1px solid #000;
-        resize: horizontal;
-        cursor：s-resize;
-    }
-</style>
-
-<div id="text-div" contenteditable="plaintext-only"></div>
-
-
-
 
 </body>
 
 <script>
-
-
-var isIE = false
-
-    var showVedio = function () {
-        console.log('第一次调用 showVedio')
-
-        if (isIE) {
-            return function () {
-                console.log('在 IE 中调用 showVedio')
-            }
-        } else {
-            return function () {
-                console.log('在 非IE 中国调用 showVedio')
-            }
-        }
-    }()
-
-    showVedio();
-    showVedio();
-    showVedio();
 
 
 
