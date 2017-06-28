@@ -29,7 +29,6 @@
 <!--<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>-->
 
 <script>
-    // 一下所有代码之后需要改写成 ES6
 
 //    document.body.addEventListener('click', actions)
 //
@@ -59,91 +58,84 @@
     // 仅实现通过标签的方式
 
     // 记录当前这个标签上所有代理的方法
-    actionsCollection = []
+    let actionsCollection = []
 
-    function Delegate (tagName) {
-        if (!tagName) new Error('tagName is required')
-        this.tag = tagName.toUpperCase()
-        this.wrap = document.querySelector(tagName)
-        this.wrap ? void 0 : new Error('tagName must be an exist element')
-    }
-    
-    Delegate.prototype = {
-        test: function () {
-            
-        }
-    }
-
-    Delegate.prototype.on = function (type, aimTagName, action) {
-        if (typeof action !== 'function') {
-            new Error('action must be an function')
-            return
+    class Delegate {
+        constructor (tagName) {
+            if (!tagName) new Error('tagName is required')
+            this.tag = tagName.toUpperCase()
+            this.wrap = document.querySelector(tagName)
+            this.wrap ? void 0 : new Error('tagName must be an exist element')
         }
 
-        var funcName = action.name
-        var aimTag = aimTagName ? aimTagName.toUpperCase() : this.tag // 如果 aimTagName 不存在 则绑定到自身
+        on (type, aimTagName, action) {
+            if (typeof action !== 'function') {
+                new Error('action must be an function')
+                return
+            }
 
-        // 如果不是匿名函数 则记录当前的事件
-        // tag 该事件绑定的标签
-        // type 记录触发类型
-        if (funcName) {
-            actionsCollection.push({
-                name: funcName,
-                tag: aimTag,
-                type: type
+            var funcName = action.name
+            var aimTag = aimTagName ? aimTagName.toUpperCase() : this.tag // 如果 aimTagName 不存在 则绑定到自身
+
+            // 如果不是匿名函数 则记录当前的事件
+            // tag 该事件绑定的标签
+            // type 记录触发类型
+            if (funcName) {
+                actionsCollection.push({
+                    name: funcName,
+                    tag: aimTag,
+                    type: type
+                })
+            }
+
+            this.wrap.addEventListener(type, e => {
+                if (e.target && e.target.nodeName.toUpperCase() === aimTag) {
+                    if (!funcName) { // 匿名函数 直接执行 不需要判断是够已经移除
+                        action (e)
+                    }
+                    else { // 处理非匿名函数 函数可以被移除
+                        // 由于一个函数可能被用于多个标签上 所以此处要遍历所有的代理方法
+                        actionsCollection.map(func => {
+                            if (func.name === funcName &&
+                                func.tag === aimTag &&
+                                func.type === type) action (e)
+                        })
+                    }
+                }
             })
         }
 
-        this.wrap.addEventListener(type, function (e) {
-            if (e.target && e.target.nodeName.toUpperCase() === aimTag) {
-                if (!funcName) { // 匿名函数 直接执行 不需要判断是够已经移除
-                    action (e)
-                }
-                else { // 处理非匿名函数 函数可以被移除
-                    // 由于一个函数可能被用于多个标签上 所以此处要遍历所有的代理方法
-                    actionsCollection.map(function(func) {
-                        if (func.name === funcName &&
-                                func.tag === aimTag &&
-                                func.type === type) action (e)
+        // 不传入参数 将移除改元素上所有的事件
+        // 如果只传入 type 将移除这个元素上的所有 type 事件
+        // 同时传入两个参数 将移除这个元素上对应 type 的对应事件
+        off (type, actionName) {
+            let temp = []
+            if (!arguments.length) {
+                actionsCollection.map(func => {
+                    if (func.tag !== this.tag) temp.push(func)
+                })
+            } else {
+                if (!actionName) {
+                    actionsCollection.map(func => {
+                        if (func.tag !== this.tag ||
+                            func.type !== type) temp.push(func)
+                    })
+                } else {
+                    actionsCollection.map(func => {
+                        console.log(func)
+                        if (func.tag !== this.tag ||
+                            func.type !== type ||
+                            func.name !== actionName) temp.push(func)
                     })
                 }
             }
-        })
-    }
-
-    // 不传入参数 将移除改元素上所有的事件
-    // 如果只传入 type 将移除这个元素上的所有 type 事件
-    // 同时传入两个参数 将移除这个元素上对应 type 的对应事件
-    Delegate.prototype.off = function (type, actionName) {
-        var temp = []
-        var self = this
-        if (!arguments.length) {
-            actionsCollection.map(function(func) {
-                if (func.tag !== self.tag) temp.push(func)
-            })
-        } else {
-            if (!actionName) {
-                actionsCollection.map(function(func) {
-                    if (func.tag !== self.tag ||
-                            func.type !== type) temp.push(func)
-                })
-            } else {
-                actionsCollection.map(function(func) {
-                    console.log(func)
-                    if (func.tag !== self.tag ||
-                            func.type !== type ||
-                            func.name !== actionName) temp.push(func)
-                })
-            }
+            actionsCollection = temp
         }
-        console.log(temp)
-        actionsCollection = temp
     }
 
     // 不使用 new 关键字创建绑定对象
     function D (tagName) {
         var d = new Delegate(tagName)
-        console.log(d)
         return d
     }
 
@@ -180,7 +172,7 @@
     }
 
     ul.parentNode.appendChild(
-            document.createElement('div')
+        document.createElement('div')
     )
 
 
