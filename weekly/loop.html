@@ -2,9 +2,36 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>loop</title>
 </head>
 <body>
+
+<script>
+    const arr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+    for (let i = 0; i < arr.length; i ++) {
+        console.log(arr[i])
+        if (i > 5) break
+    }
+
+    const tempEach = arr.forEach( (item, index) => {
+        console.log(item, index, this)
+        if (index > 5) return
+    } )
+    console.log(tempEach)
+
+    const tempMap = arr.map( (item, index) => {
+        console.log(item, index)
+        if (index > 5) return item
+    } )
+    console.log(tempMap)
+
+    const mapArray1 = arr.map(item => item + 1)
+    console.log(mapArray1)
+
+    const mapArray2 = arr.map(item => {item + 1})
+    console.log(mapArray2)
+</script>
 
 </body>
 </html>
