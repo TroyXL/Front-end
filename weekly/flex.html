@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>flex</title>
+</head>
+<body>
+
+<style>
+    p{
+        padding-left: 10px;
+    }
+    .container {
+        display: flex;
+        text-align: center;
+        border: 1px solid #000;
+    }
+
+    .row{flex-direction: row;}
+    .row-reverse{flex-direction: row-reverse;}
+    .column{flex-direction: column;}
+    .column-reverse{flex-direction: column-reverse;}
+
+    .wrap {flex-wrap: wrap;}
+    .wrap-reverse {flex-wrap: wrap-reverse;}
+
+    .item {
+        width: 40px;
+        height: 40px;
+        flex-basis: 40px;
+        flex-grow: 0;
+        flex-shrink: 0;
+        line-height: 40px;
+        border: 3px solid #deafcb;
+        color: #deafcb;
+        margin: 5px;
+    }
+
+    .flex-start {justify-content: flex-start;}
+    .flex-end {justify-content: flex-end;}
+    .center {justify-content: center;}
+    .space-between {justify-content: space-between;}
+    .space-around {justify-content: space-around;}
+
+</style>
+
+<p>justify-content: flex-start;</p>
+<div class="container row flex-start">
+    <div class="item">1</div>
+    <div class="item">2</div>
+    <div class="item">3</div>
+</div>
+<p>justify-content: flex-end;</p>
+<div class="container row flex-end">
+    <div class="item">1</div>
+    <div class="item">2</div>
+    <div class="item">3</div>
+</div>
+<p>justify-content: center;</p>
+<div class="container row center">
+    <div class="item">1</div>
+    <div class="item">2</div>
+    <div class="item">3</div>
+</div>
+<p>justify-content: space-between;</p>
+<div class="container row space-between">
+    <div class="item">1</div>
+    <div class="item">2</div>
+    <div class="item">3</div>
+</div>
+<p>justify-content: space-around;</p>
+<div class="container row space-around">
+    <div class="item">1</div>
+    <div class="item">2</div>
+    <div class="item">3</div>
+</div>
+
+
+
+
+
+<p>flex-wrap: wrap-reverse;</p>
+<div class="container row wrap-reverse">
+    <div class="item">1</div>
+    <div class="item">2</div>
+    <div class="item">3</div>
+    <div class="item">4</div>
+    <div class="item">5</div>
+    <div class="item">6</div>
+    <div class="item">7</div>
+    <div class="item">8</div>
+    <div class="item">9</div>
+    <div class="item">10</div>
+</div>
+<p>flex-direction: row-reverse;</p>
+<div class="container row-reverse">
+    <div class="item">1</div>
+    <div class="item">2</div>
+    <div class="item">3</div>
+    <div class="item">4</div>
+    <div class="item">5</div>
+    <div class="item">6</div>
+    <div class="item">7</div>
+    <div class="item">8</div>
+    <div class="item">9</div>
+    <div class="item">10</div>
+</div>
+<p>flex-direction: column;</p>
+<div class="container column">
+    <div class="item">1</div>
+    <div class="item">2</div>
+    <div class="item">3</div>
+</div>
+<p>flex-direction: column-reverse;</p>
+<div class="container column-reverse">
+    <div class="item">1</div>
+    <div class="item">2</div>
+    <div class="item">3</div>
+</div>
+
+<style>
+
+
+</style>
+
+<p></p>
+<div class="container row wrap">
+    <div class="item">1</div>
+    <div class="item">2</div>
+    <div class="item">3</div>
+</div>
+
+
+
+</body>
+</html>
