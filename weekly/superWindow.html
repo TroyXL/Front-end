@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>super window</title>
+</head>
+<body>
+
+<h3>super window</h3>
+<p id="message"></p>
+
+<a href="javascript:;" id="post">打开新窗口并监听消息</a>
+
+<script>
+
+    document.getElementById('post').onclick = function () {
+        // 打开一个新窗口
+        var subWindow = window.open('subWindow.html')
+        // 监听 message 事件
+        window.addEventListener('message', function (e) {
+            console.log(e)
+            // 校验发送消息的窗口的源
+            if (e.origin != 'http://192.168.1.101:8081') return
+            document.getElementById('message').innerText = e.data
+        } )
+    }
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>sub window</title>
+</head>
+<body>
+
+<h3>sub window</h3>
+
+<script>
+
+    // 通过 window.opener 获取到打开当前窗口的窗口，即 super window
+    // 由于当前是同源窗口传递消息，所以第二个参数设为 /
+    window.opener.postMessage('super window 接收到了一条消息', '/')
+    
+</script>
+
+</body>
+</html>
