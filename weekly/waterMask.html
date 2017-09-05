@@ -6,12 +6,56 @@
 </head>
 <body>
 
+<style>
+	img {width: 500px;}
+</style>
+
+<div id="image-box">
+	<!-- <img :src="item" v-for="item in sourceList"> -->
+	<img :src="item" v-for="item in outputImages">
+</div>
+
+
+<script src="https://cdn.bootcss.com/vue/2.3.4/vue.min.js"></script>
 <script src="./js/waterMask.js"></script>
+
 
 <script>
 	const wm = new Watermask ({
-		maskImage: 'https://avatars3.githubusercontent.com/u/17195980?v=4&s=460'
+		maskImage: '../../statics/watermask.jpeg',
+		position: {
+			horizontal: 'left',
+			vertical: 'top',
+		},
+		scale: 0.01,
+		margin: 100
 	})
+
+	const page = new Vue ({
+		el: '#image-box',
+		data: {
+			sourceList: [
+				'../../statics/girl.jpg',
+				'../../statics/grass.jpg',
+				'../../statics/japan.jpg'
+			],
+			outputImages: []
+		}
+	})
+
+	let index = 0
+	wm.setStatusListener( (status) => {
+		console.log('status: '+status)
+		if (status == 1 && index < page.sourceList.length) {
+			console.log('------',index)
+			console.log(page.sourceList[index])
+			wm.setSourceImage([page.sourceList[index]])
+			index = index + 1
+		} 
+		if (status == 3) page.outputImages = wm.getWatermaskImage().map( (item) => item.src || item )
+	} )
+
+	
 </script>
 
 </body>
