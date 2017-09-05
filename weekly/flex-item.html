@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>flex</title>
+</head>
+<body>
+<style>
+    .box {
+        text-align: center;
+        border: 1px solid #000;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        border: 1px solid #000;
+    }
+
+    .item {
+        width: 40px;
+        height: 40px;
+        margin: 10px;
+        border: 5px solid #deafcb;
+    }
+
+    .item-1 {
+        flex-basis: 80px;
+        flex-grow: 0;
+        flex-shrink: 0;
+    }
+    .item-2 {
+        flex-basis: 20px;
+        flex-grow: 0;
+        flex-shrink: 0;
+    }
+    .item-3 {
+        flex-basis: 30px;
+        flex-grow: 0;
+        flex-shrink: 0;
+    }
+    .item-4 {
+        flex-basis: 50px;
+        flex-grow: 0;
+        flex-shrink: 0;
+    }
+
+
+</style>
+
+<div class="box">
+    <div class="item item-1">0</div>
+    <div class="item item-2">1</div>
+    <div class="item item-3">2</div>
+    <div class="item item-4">3</div>
+</div>
+
+</body>
+</html>
