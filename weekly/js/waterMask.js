@@ -6,7 +6,7 @@
  *	@param margin {Int} optional 在非水平垂直居中的情况下，水印与图片边缘的距离，默认 10px
  */
 
- class Watermask {
+class Watermask {
  	constructor (opts) {
  		// 目标图片缓存池 [{index, sourceImage, outputImage, status}]
  		this.pool = []
@@ -17,13 +17,12 @@
  		// 2-pending 正在为图片添加水印
  		// 3-complete 当前所有图片添加水印完成
  		this.status = {
- 			code: undefined,
- 			completeCounter: undefined,
+ 			code: 0,
+ 			completeCounter: 0,
  			listener: (status) => console.log(status)
  		}
  		this._watchStatusChange()
- 		this.status.code = 0
- 		this.status.completeCounter = 0
+ 		// 初始化工作状态与完成计数
  		
  		// 目标图片索引
  		this.currentIndex = 0
@@ -35,10 +34,10 @@
  		this.position = opts.position ? opts.position : {}
  		// 校验 postion 的值，如果不正确，则使用默认值
  		this.position.horizontal = this.position.horizontal ? (
- 				['left', 'center', 'right'].indexOf(this.position.horizontal) > -1 ? this.position.horizontal : 'center'
+ 			['left', 'center', 'right'].indexOf(this.position.horizontal) > -1 ? this.position.horizontal : 'center'
  			) : 'center'
  		this.position.vertical = this.position.vertical ? (
- 				['top', 'middle', 'bottom'].indexOf(this.position.vertical) > -1 ? this.position.vertical : 'middle'
+ 			['top', 'middle', 'bottom'].indexOf(this.position.vertical) > -1 ? this.position.vertical : 'middle'
  			) : 'middle'
 
  		// 水印与图片的比例
@@ -69,12 +68,11 @@
  	 *  @param sourceImageArray {Array<String>} required 需要添加水印的图片 src 列表
  	 */
  	setSourceImage (sourceImageArray) {
- 		console.log('setSourceImage')
- 		if (this.status.code != 1) {
- 			console.warn('now is waiting for complete, cannot add more images')
- 			return
- 		}
- 		if (! (sourceImageArray instanceof Array)) throw new Error ('sourceImageArray must be an Array')
+ 	 	if (this.status.code != 1) {
+ 	 		console.warn('now is waiting for complete, cannot add more images')
+ 	 		return
+ 	 	}
+ 	 	if (! (sourceImageArray instanceof Array)) throw new Error ('sourceImageArray must be an Array')
  		// 将目标图片存入缓存池
  		// 如果不是字符串将会在输出图片时输出错误
  		let errorCounter = 0 // 记录出错的项目数量
@@ -85,12 +83,12 @@
  				errorCounter += 1
  			}
  			this.pool.push({
-	 			index: this.currentIndex,
-	 			sourceImage: item,
-	 			outputImage: null,
-	 			error: errorMsg
-	 		})
-	 		this.currentIndex += 1
+ 				index: this.currentIndex,
+ 				sourceImage: item,
+ 				outputImage: null,
+ 				error: errorMsg
+ 			})
+ 			this.currentIndex += 1
  		} )
  		// 遍历结束后，给完成计数赋值
  		this._increaseCompleteCounter(errorCounter)
@@ -104,11 +102,11 @@
  	 *	@return outputImageArray {Array<Image>} 添加完水印的图片列表，顺序与输入的图片顺序相同
  	 */
  	getWatermaskImage () {
- 		if (this.status.code != 3) return
- 		const outputImageArray = this.pool.map( (item) => {
- 			if (!item.error) return item.outputImage
- 			else return new Error (item.error)
- 		} )
+ 	 	if (this.status.code != 3) return
+ 	 		const outputImageArray = this.pool.map( (item) => {
+ 	 			if (!item.error) return item.outputImage
+ 	 				else return new Error (item.error)
+ 	 			} )
  		this.pool = [] // 取出图片后清空缓存池
  		this.status.completeCounter = 0 // 清空已完成计数
  		return outputImageArray
@@ -125,62 +123,56 @@
  	setStatusListener (listener) {
  		this.status.listener = listener && typeof listener == 'function' ? listener : void 0
  		// 如果在设置监听器之前，状态已经改变，则手动执行一次监听器方法
- 		if (this.status.code) this.status.listener(this.status.code)
+ 		if (this.status.code==1) this.status.listener(this.status.code)
  	}
 
-
-
- 	/*********************************************************************************/
- 	/********************************* 私有方法分割线 ***********************************/
- 	/*********************************************************************************/
+/*********************************************************************************/
+/********************************* 私有方法分割线 **********************************/
+/*********************************************************************************/
 
  	/**
  	 *	状态监测，状态改变时主动调用 listener
  	 */
  	_watchStatusChange () {
- 		const self = this
- 		Object.defineProperty(self.status, 'code', {
-		    enumerable: true,
-		    configurable: true,
-		    get: function () {
-		        return this.codeValue
-		    },
-		    set: function (newVal) {
-		        if (this.codeValue !== newVal) {
-		        	this.codeValue = newVal
-		        	self.status.listener(newVal)
-		        }
-		    }
-		})
-		Object.defineProperty(self.status, 'completeCounter', {
-		    enumerable: true,
-		    configurable: true,
-		    get: function () {
-		        return this.counterValue
-		    },
-		    set: function (newVal) {
-		        if (this.counterValue !== newVal) {
-		        	this.counterValue = newVal
-		        	self._checkComplete()
-		        }
-		    }
-		})
+ 	 	const self = this
+ 	 	Object.defineProperty(self.status, 'code', {
+ 	 		enumerable: true,
+ 	 		configurable: true,
+ 	 		get: function () {
+ 	 			return this.codeValue || 0
+ 	 		},
+ 	 		set: function (newVal) {
+ 	 			if (this.codeValue !== newVal) {
+ 	 				this.codeValue = newVal
+ 	 				self.status.listener(newVal)
+ 	 			}
+ 	 		}
+ 	 	})
+ 	 	Object.defineProperty(self.status, 'completeCounter', {
+ 	 		enumerable: true,
+ 	 		configurable: true,
+ 	 		get: function () {
+ 	 			return this.counterValue || 0
+ 	 		},
+ 	 		set: function (newVal) {
+ 	 			if (this.counterValue !== newVal) {
+ 	 				this.counterValue = newVal
+ 	 				self._checkComplete()
+ 	 			}
+ 	 		}
+ 	 	})
  	}
 
  	/**
  	 *	遍历缓存池中的项目
  	 */
  	_loopImagePool () {
- 		this.status.code = 2
- 		console.log('_loopImage')
- 		for (let i = 0; i < this.pool.length; i ++) {
- 			const item = this.pool[i]
- 			// 如果当前缓存池中的这个项目存在错误或者已经有输出图像，则忽略
- 			if (item.error || item.outputImage) continue
- 			// 当前项目无错误也没有输出图像，则开始准备添加水印
- 			else this._beforeAddWatermask(i, item)
- 		}
- 	}
+ 	 	this.status.code = 2
+ 	 	for (let i = 0; i < this.pool.length; i ++) {
+ 	 		const item = this.pool[i]
+ 	 		this._beforeAddWatermask(i, item)
+ 	 	}
+ 	 }
 
  	/**
  	 *	向图片上添加水印之前的操作，加载图片，如果加载出错则标记错误
@@ -188,11 +180,12 @@
  	 *	@param item {Object} 当前缓存池中的项目
  	 */
  	_beforeAddWatermask (i, item) {
- 		const index = item.index
- 		const tempImage = new Image()
+ 	 	const tempImage = new Image()
+ 		// 图片加载完成，开始添加水印
  		tempImage.onload = () => {
  			this._addWatermask(i, tempImage)
  		}
+ 		// 图片加载出错，标记错误，并增加完成计数
  		tempImage.onerror = () => {
  			this.pool[i].error = 'load image error: '+ item.sourceImage
  			this._increaseCompleteCounter(1)
@@ -205,19 +198,22 @@
  	 *	@param i {Int} 当前缓存池中的项目索引
  	 *	@param image {Image} 当前要添加水印的图片对象
  	 */
- 	 _addWatermask (i, image) {
+ 	_addWatermask (i, image) {
+ 	 	// 创建 canvas 用来绘制图片和水印
  	 	const canvas = document.createElement('canvas')
  	 	const ctx = canvas.getContext('2d')
+ 	 	// 创建一个绘制完水印的图片承载容器
  	 	const completedImage = new Image()
- 	 	completedImage.crossOrigin = "Anonymous"
-
+ 	 	completedImage.crossOrigin = "Anonymous" // 设置图片跨域
+ 	 	// 绘制完的图片加载完后，修改缓存池中的该项目输出图像属性，并增加完成计数
  	 	completedImage.onload = () => {
  	 		this.pool[i].outputImage = completedImage
  	 		this._increaseCompleteCounter(1)
  	 	}
+ 	 	// 绘制完的图片加载失败，记录失败原因，并增加完成计数
  	 	completedImage.onerror = () => {
- 			this.pool[i].error = 'load watermask image error: '+ this.pool[i].sourceImage
- 			this._increaseCompleteCounter(1)
+ 	 		this.pool[i].error = 'load watermask image error: '+ this.pool[i].sourceImage
+ 	 		this._increaseCompleteCounter(1)
  	 	}
 
  	 	// 在 canvas 上绘制原图
@@ -226,9 +222,9 @@
  	 	ctx.drawImage(image, 0, 0, image.width, image.height)
  	 	// 在 canvas 上绘制水印
  	 	this._drawWatermaskOncanvasContext(ctx, this.maskImage, image)
-
+ 	 	// 从canvas上将绘制完水印的图片转为 base64 并赋值给图片容器的 src
  	 	completedImage.src = canvas.toDataURL("image/png")
- 	 }
+ 	}
 
  	 /**
  	  * 绘制水印
@@ -236,7 +232,7 @@
  	  * @param mask {Image} 水印图片对象
  	  * @param image {Image} 添加水印的图片对象
  	  */
- 	 _drawWatermaskOncanvasContext (ctx, mask, image) {
+ 	_drawWatermaskOncanvasContext (ctx, mask, image) {
  	 	// 计算绘制水印的尺寸
  	 	const tempWidth = mask.width
  	 	mask.width = image.width * this.scale
@@ -247,40 +243,48 @@
  	 	// 水平方向
  	 	switch (this.position.horizontal) {
  	 		case 'left':
- 	 			positionX = this.margin
- 	 			break
+ 	 		positionX = this.margin
+ 	 		break
  	 		case 'right':
- 	 			positionX = image.width - mask.width - this.margin
- 	 			break
+ 	 		positionX = image.width - mask.width - this.margin
+ 	 		break
  	 		case 'center':
- 	 			positionX = (image.width - mask.width) / 2
+ 	 		positionX = (image.width - mask.width) / 2
  	 	}
  	 	// 垂直方向
  	 	switch (this.position.vertical) {
  	 		case 'top':
- 	 			positionY = this.margin
- 	 			break
+ 	 		positionY = this.margin
+ 	 		break
  	 		case 'bottom':
- 	 			positionY = image.height - mask.height - this.margin
- 	 			break
+ 	 		positionY = image.height - mask.height - this.margin
+ 	 		break
  	 		case 'middle':
- 	 			positionY = (image.height - mask.height) / 2
+ 	 		positionY = (image.height - mask.height) / 2
  	 	}
  	 	ctx.drawImage(mask, positionX, positionY, mask.width, mask.height)
- 	 }
+ 	}
 
- 	 _increaseCompleteCounter (count) {
+	/**
+ 	 * 增加完成计数
+ 	 * @param count {Int} 需要增加的计数
+ 	 */
+ 	_increaseCompleteCounter (count) {
  	 	this.status.completeCounter = this.status.completeCounter + count
- 	 }
+ 	}
 
- 	 _checkComplete () {
- 	 	// 缓存池中存在项目时
+	/**
+ 	 * 校验当前缓存池中的图片是否已经全部添加水印
+ 	 * @param count {Int} 需要增加的计数
+ 	 */
+ 	_checkComplete () {
  	 	if (this.pool.length) {
- 	 		// 已完成计数与缓存池项目数相同时，添加水印全部完成
+ 	 		// 缓存池中存在项目，且已完成计数与缓存池项目数相同时，添加水印全部完成
  	 		if (this.status.completeCounter == this.pool.length) this.status.code = 3
- 	 	} else { // 缓存池中无项目
+ 	 	} else { 
+ 	 		// 当缓存池被清空，完成计数变为 0 时，更改 code = 1
  	 		this.status.code = 1
  	 	}
- 	 }
+ 	}
 }
 

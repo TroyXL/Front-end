@@ -24,10 +24,10 @@
 	const wm = new Watermask ({
 		maskImage: '../../statics/watermask.jpeg',
 		position: {
-			horizontal: 'left',
-			vertical: 'top',
+			horizontal: 'right',
+			vertical: 'bottom',
 		},
-		scale: 0.01,
+		scale: 0.05,
 		margin: 100
 	})
 
@@ -45,14 +45,12 @@
 
 	let index = 0
 	wm.setStatusListener( (status) => {
-		console.log('status: '+status)
+		console.log('############# status: '+status)
 		if (status == 1 && index < page.sourceList.length) {
-			console.log('------',index)
-			console.log(page.sourceList[index])
 			wm.setSourceImage([page.sourceList[index]])
 			index = index + 1
 		} 
-		if (status == 3) page.outputImages = wm.getWatermaskImage().map( (item) => item.src || item )
+		if (status == 3) page.outputImages.push(wm.getWatermaskImage().map( (item) => item.src || item ))
 	} )
 
 	
