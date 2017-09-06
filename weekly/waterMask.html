@@ -45,7 +45,6 @@
 
 	let index = 0
 	wm.setStatusListener( (status) => {
-		console.log('############# status: '+status)
 		if (status == 1 && index < page.sourceList.length) {
 			wm.setSourceImage([page.sourceList[index]])
 			index = index + 1
