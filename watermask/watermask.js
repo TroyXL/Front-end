@@ -1,14 +1,25 @@
 /**
  *  图片添加水印方法
+ *
+ *	使用方法
+ *	1. 创建 Watermask 实例
+ *	2. 通过 setStatusListener() 方法监听实例的当前状态：当状态为 1 时，可以添加需要绘制水印的素材图片路径；当状态为 3 时，可以获取已经绘制完成的图片 src (base64 格式)，同时实例状态变为 1
+ *	3. 通过 setSourceImage() 方法添加素材图片，方法接受一个图片路径数组
+ *	4. 通过 getWatermaskImage() 方法可以获取绘制完水印的图片对象数组，在绘制过程中如果发生错误，则该项为错误原因，而不是图片对象（程序不会抛出错误）
+ *
+ *	参数说明
+ *	@param opts {Object} required 配置项参数对象，具体配置见下方配置项参数说明
+ *
+ *	配置项参数说明
  *	@param maskImage {String} required 水印图片 src
  *	@param position {Object} optional 水印添加位置 {horizontal: left | center<default> | right, vertical: top | middle<default> | bottom}, 默认水平垂直居中
- *	@param scale {Float} optional 水印与图片的宽的比值，范围(0, 1]，默认 0.1
  *	@param margin {Int} optional 在非水平垂直居中的情况下，水印与图片边缘的距离，默认 10px
+ *	@param scale {Float} optional 水印与图片的宽的比值，范围(0, 1]，默认 0.1
  */
 
 class Watermask {
  	constructor (opts) {
- 		// 目标图片缓存池 [{index, sourceImage, outputImage, status}]
+ 		// 目标图片缓存池 [{sourceImage, outputImage, status}]
  		this.pool = []
 
  		// 当前工作状态
@@ -22,10 +33,6 @@ class Watermask {
  			listener: (status) => console.log(status)
  		}
  		this._watchStatusChange()
- 		// 初始化工作状态与完成计数
- 		
- 		// 目标图片索引
- 		this.currentIndex = 0
 
  		// 水印边距
  		this.margin = opts.margin || opts.margin == 0 ? opts.margin : 10
@@ -34,10 +41,12 @@ class Watermask {
  		this.position = opts.position ? opts.position : {}
  		// 校验 postion 的值，如果不正确，则使用默认值
  		this.position.horizontal = this.position.horizontal ? (
- 			['left', 'center', 'right'].indexOf(this.position.horizontal) > -1 ? this.position.horizontal : 'center'
+ 			['left', 'center', 'right'].indexOf(this.position.horizontal) > -1 ? 
+ 				this.position.horizontal : 'center'
  			) : 'center'
  		this.position.vertical = this.position.vertical ? (
- 			['top', 'middle', 'bottom'].indexOf(this.position.vertical) > -1 ? this.position.vertical : 'middle'
+ 			['top', 'middle', 'bottom'].indexOf(this.position.vertical) > -1 ? 
+ 				this.position.vertical : 'middle'
  			) : 'middle'
 
  		// 水印与图片的比例
@@ -54,8 +63,10 @@ class Watermask {
  				this.maskImage = tempImage
  				// 水印图片加载完成，准备完毕
  				this.status.code = 1
+ 				tempImage = null
  			}
  			tempImage.onerror = () => {
+ 				tempImage = null
  				throw new Error ('mask image load error')
  			}
  			tempImage.src = opts.maskImage
@@ -83,12 +94,10 @@ class Watermask {
  				errorCounter += 1
  			}
  			this.pool.push({
- 				index: this.currentIndex,
  				sourceImage: item,
  				outputImage: null,
  				error: errorMsg
  			})
- 			this.currentIndex += 1
  		} )
  		// 遍历结束后，给完成计数赋值
  		this._increaseCompleteCounter(errorCounter)
@@ -126,9 +135,9 @@ class Watermask {
  		if (this.status.code==1) this.status.listener(this.status.code)
  	}
 
-/*********************************************************************************/
-/********************************* 私有方法分割线 **********************************/
-/*********************************************************************************/
+/**************************************警告***************************************/
+/********************************* 以下为私有方法 **********************************/
+/**********************************请勿调用及修改***********************************/
 
  	/**
  	 *	状态监测，状态改变时主动调用 listener
@@ -180,15 +189,17 @@ class Watermask {
  	 *	@param item {Object} 当前缓存池中的项目
  	 */
  	_beforeAddWatermask (i, item) {
- 	 	const tempImage = new Image()
+ 	 	let tempImage = new Image()
  		// 图片加载完成，开始添加水印
  		tempImage.onload = () => {
  			this._addWatermask(i, tempImage)
+ 			tempImage = null
  		}
  		// 图片加载出错，标记错误，并增加完成计数
  		tempImage.onerror = () => {
  			this.pool[i].error = 'load image error: '+ item.sourceImage
  			this._increaseCompleteCounter(1)
+ 			tempImage = null
  		}
  		tempImage.src = item.sourceImage
  	}
@@ -200,20 +211,26 @@ class Watermask {
  	 */
  	_addWatermask (i, image) {
  	 	// 创建 canvas 用来绘制图片和水印
- 	 	const canvas = document.createElement('canvas')
- 	 	const ctx = canvas.getContext('2d')
+ 	 	let canvas = document.createElement('canvas')
+ 	 	let ctx = canvas.getContext('2d')
  	 	// 创建一个绘制完水印的图片承载容器
- 	 	const completedImage = new Image()
+ 	 	let completedImage = new Image()
  	 	completedImage.crossOrigin = "Anonymous" // 设置图片跨域
  	 	// 绘制完的图片加载完后，修改缓存池中的该项目输出图像属性，并增加完成计数
  	 	completedImage.onload = () => {
  	 		this.pool[i].outputImage = completedImage
  	 		this._increaseCompleteCounter(1)
+ 	 		completedImage = null
+ 	 		canvas = null
+ 	 		ctx = null
  	 	}
  	 	// 绘制完的图片加载失败，记录失败原因，并增加完成计数
  	 	completedImage.onerror = () => {
  	 		this.pool[i].error = 'load watermask image error: '+ this.pool[i].sourceImage
  	 		this._increaseCompleteCounter(1)
+ 	 		completedImage = null
+ 	 		canvas = null
+ 	 		ctx = null
  	 	}
 
  	 	// 在 canvas 上绘制原图
@@ -287,4 +304,3 @@ class Watermask {
  	 	}
  	}
 }
-

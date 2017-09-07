@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>water mask</title>
+</head>
+<body>
+
+<style>
+	img {width: 400px;}
+</style>
+
+<div id="image-box">
+	<img :src="item" v-for="item in outputImages">
+</div>
+
+
+<script src="https://cdn.bootcss.com/vue/2.3.4/vue.min.js"></script>
+<script src="./watermask.js"></script>
+
+<script>
+	if (!window.localStorage.tip) {
+		alert('你可以打开控制台，查看不同状态的输出')
+		window.localStorage.setItem('tip', 1)
+	}
+
+	const wm = new Watermask ({
+		maskImage: './statics/watermask.jpeg',
+		position: {
+			horizontal: 'right',
+			vertical: 'bottom',
+		},
+		scale: 0.05,
+		margin: 100
+	})
+
+	const page = new Vue ({
+		el: '#image-box',
+		data: {
+			sourceList: [
+				'./statics/girl.jpg',
+				'./statics/grass.jpg',
+				'./statics/japan.jpg'
+			],
+			outputImages: []
+		}
+	})
+
+	let index = 0
+	wm.setStatusListener( (status) => {
+		if (status == 1 && index < page.sourceList.length) {
+			// 此处实现上一张图片添加完成后，再添加下一张的效果
+			// 实际使用中，可以一次添加多张图片，但是要注意操作的图片过多过大会严重消耗性能和内存
+			console.log('add image: ' + [page.sourceList[index]])
+			wm.setSourceImage([page.sourceList[index]])
+		} 
+		if (status == 3) {
+			// 一旦调用 getWatermaskImage()，wm 的状态就会被立即改变，然后就会调用 status=1 时的用户自定义方法
+			// 所以如果有会影响到输入图片的变量需要被更改，请在调用 getWatermaskImage() 之前更改
+			console.log('第 '+ (index+1) + ' 张图片已经完成水印绘制')
+			index = index + 1
+			// getWatermaskImage() 返回输出图像对象数组，如果发生错误，则会用错误信息替代这个图像对象
+			// 遍历该数组，如果遍历的项目无 src 属性，表示该项目发生错误，项目为错误信息
+			page.outputImages.push(wm.getWatermaskImage().map( (item) => item.src || item ))
+		}
+	} )
+	
+</script>
+
+</body>
+</html>
