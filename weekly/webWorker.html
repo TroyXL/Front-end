@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>webWorker</title>
+</head>
+<body>
+
+
+</body>
+
+<script>
+
+let total = 1
+console.time('timer')
+for (let i = 0; i < 100000000; i ++) {
+  total = total + i
+}
+console.log(total)
+console.timeEnd('timer')
+
+var worker = new Worker("./js/webWorker.js");
+console.time('web worker time')
+worker.onmessage = function(e){
+  console.log(e)
+  console.timeEnd('web worker time')
+};
+// 主线程向子线程发送消息
+worker.postMessage({
+    type: "start"
+});
+
+</script>
+
+
+</html>
