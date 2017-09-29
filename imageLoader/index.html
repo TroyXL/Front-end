@@ -20,15 +20,75 @@
   }
 </style>
 
-<img src="https://static.cxstore.top/images/test.jpg" class="image-loader">
+<div id="images-box">
+  <div v-for="item in list">
+    {{item.tip}}
+    <img :src="item.src" class="image-loader">
+  </div>
+  
+</div>
 
 
 
-
+<script src="https://cdn.bootcss.com/vue/2.3.4/vue.min.js"></script>
 <script src="./image-loader.js"></script>
 <script>
 const loader = new ImageLoader({
-  
+  success (src) {
+    console.log(1)
+    loopList(src, 1)
+  },
+  fail (src) {
+    console.log(0)
+    loopList(src, 0)
+  }
+})
+
+function loopList (src, loadSuccess) {
+  const tip = loadSuccess ? '加载成功' : '加载失败'
+  for (let i = 0; i < v.list.length; i++) {
+    v.list[i].tip = v.list[i].src === src ? tip : v.list[i].tip
+  }
+}
+
+const v = new Vue ({
+  el: '#images-box',
+  data () {
+    return {
+      list: []
+    }
+  },
+  watch: {
+    list () {
+      this.$nextTick(() => {
+        loader.listen()
+      })
+    }
+  },
+  created () {
+    this.list.push({
+      src: 'https://static.cxstore.top/images/tst.jpg',
+      tip: '加载中'
+    })
+    setTimeout(() => {
+      this.list.push({
+      src: 'https://static.cxstore.top/images/avatar1.jpg',
+      tip: '加载中'
+    })
+    }, 2000)
+    setTimeout(() => {
+      this.list.push({
+      src: 'https://static.cxstore.top/images/tst.jpg',
+      tip: '加载中'
+    })
+    }, 4000)
+    setTimeout(() => {
+      this.list.push({
+      src: 'https://static.cxstore.top/images/tst.jpg',
+      tip: '加载中'
+    })
+    }, 6000)
+  }
 })
 </script>
 
