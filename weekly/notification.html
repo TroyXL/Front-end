@@ -18,12 +18,15 @@
 <script>
   console.log(Notification.permission)
   Notification.requestPermission().then(permission => {
-    console.log(permission)
-    alert(permission)
+    // console.log(permission)
+    // alert(permission)
   })
   setTimeout(() => {
-    const note = new Notification('test')
-  }, 5000)
+    const note = new Notification('test', {
+      body: 'test',
+      icon: 'https://static.cxstore.top/images/avatar1.jpg'
+    })
+  }, 2000)
 </script>
 
 
