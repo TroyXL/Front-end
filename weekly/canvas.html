@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+    <title>canvas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+
+</head>
+<body>
+
+<style>
+  canvas {
+    width: 200px;
+    height: 200px;
+    background: #eee
+  }
+
+  div {
+    border: 1px solid #000;
+    vertical-align: bottom;
+    box-sizing: border-box;
+  }
+</style>
+
+<p>在 canvas 上绘制一个边框宽度为 1px 的矩形</p>
+<!-- <img src="https://static.cxstore.top/images/avatar1.jpg" id="image"> -->
+
+<canvas id="canvas" width="400" height="400"></canvas>
+<br>
+<br>
+<div style="width: 400px; height: 400px; line-height: 350px;">
+  <div style="width: 200px; height: 200px; line-height: 350px;">canvas 元素实际可见尺寸</div>
+  canvas 元素实际绘图尺寸
+</div>
+
+<script>
+// const image = document.getElementById('image')
+const canvas = document.getElementById('canvas')
+const ctx = canvas.getContext('2d')
+
+// image.onload = () => {
+  // canvas.width = image.width
+  // canvas.height = image.height
+  // ctx.drawImage(image, 0, 0, image.width, image.height)
+  
+  console.log(canvas.width)
+  ctx.strokeStyle = '#000'
+  ctx.lineWidth = 1
+  ctx.strokeRect(10, 10, 100, 100)
+  ctx.scale(2, 2)
+  ctx.strokeRect(10, 10, 100, 100)
+  ctx.scale(3, 3)
+  ctx.strokeRect(10, 10, 100, 100)
+
+
+// }
+  
+</script>
+
+</body>
+
+</html>
