@@ -19,7 +19,7 @@
 <script>
 
 let fd = new FormData()
-// v0.api.upyun.com
+
 fd.append('bucket', 'static-store')
 fd.append('save-key', '/test/{filemd5}{.suffix}')
 fd.append('expiration', 1800)
@@ -40,6 +40,16 @@ $('input').on('change', function () {
     }
   })
 })
+
+function base64ToBlob (url) {
+  const bytes = window.atob(url.split(',')[1])
+  const ab = new ArrayBuffer(bytes.length)
+  let ia = new Uint8Array(ab)
+  for (let i = 0; i < bytes.length; i++) {
+    ia[i] = bytes.charCodeAt(i)
+  }
+  return new Blob([ab], {type: 'image/png'})
+}
 
 
 
