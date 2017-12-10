@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+    <title>formData</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+</head>
+<body>
+
+<input type="file" accept="image/*">
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+
+let fd = new FormData()
+
+fd.append('bucket', 'static-store')
+fd.append('save-key', '/test/{filemd5}{.suffix}')
+fd.append('expiration', 1800)
+
+$('input').on('change', function () {
+  const file = this.files[0]
+  fd.append('file', file)
+  
+  $.ajax({
+    url: 'https://v0.api.upyun.com',
+    type: 'POST',
+    data: fd,
+    dataType: 'text',
+    processData : false,
+    contentType : false, 
+    success: function (data) {
+      
+    }
+  })
+})
+
+function base64ToBlob (url) {
+  const bytes = window.atob(url.split(',')[1])
+  const ab = new ArrayBuffer(bytes.length)
+  let ia = new Uint8Array(ab)
+  for (let i = 0; i < bytes.length; i++) {
+    ia[i] = bytes.charCodeAt(i)
+  }
+  return new Blob([ab], {type: 'image/png'})
+}
+
+
+
+console.log(fd)
+</script>
+
+</body>
+</html>
