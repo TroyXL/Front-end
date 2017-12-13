@@ -89,13 +89,21 @@ class Node {
     this.right
   }
 }
-
+// console.time('binary')
 const array = [4,3,6,5,1,2,8,9]
 const binary = new BinaryTree(array)
-console.log(binary)
+// console.log(binary)
+console.time('binary')
 binary.inOrder(val => {
   console.log(val)
 })
+console.timeEnd('binary')
+
+console.time('sort')
+array.sort((a, b) => a - b)
+console.log(array)
+console.timeEnd('sort')
+
 binary.preOrder(val => {
   console.log(val)
 })
