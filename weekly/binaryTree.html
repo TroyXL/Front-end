@@ -69,12 +69,12 @@ class BinaryTree {
   }
 
   hasNode (val) {
-    console.log(this._hasNode(this.root, val))
+    // console.log(this._hasNode(this.root, val))
     return this._hasNode(this.root, val) === val
   }
   _hasNode (node, val) {
     if (!node) return
-    console.log('---', node.val)
+    // console.log('---', node.val)
     if (node.val === val) return node.val
     if (node.val > val) return this._hasNode(node.left, val)
     if (node.val < val) return this._hasNode(node.right, val)
@@ -90,27 +90,34 @@ class Node {
   }
 }
 // console.time('binary')
-const array = [4,3,6,5,1,2,8,9]
+let array = []
+for (let i = 0; i < 1000000; i++) {
+  array.push(Math.round(Math.random() * 100000000))
+}
+console.time('binary')
 const binary = new BinaryTree(array)
 // console.log(binary)
-console.time('binary')
+const temp = []
+
 binary.inOrder(val => {
-  console.log(val)
+  // console.log(val)
+  temp.push(val)
 })
 console.timeEnd('binary')
+console.log(temp.length)
 
 console.time('sort')
 array.sort((a, b) => a - b)
-console.log(array)
+// console.log(array)
 console.timeEnd('sort')
 
 binary.preOrder(val => {
-  console.log(val)
+  // console.log(val)
 })
 binary.backOrder(val => {
-  console.log(val)
+  // console.log(val)
 })
-console.log(binary.hasNode(7))
+// console.log(binary.hasNode(7))
 
 </script>
 
