@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+    <title>signature</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+
+</head>
+<body>
+<style>
+#canvas {
+  display: block;
+  background: #ccc;
+}
+</style>
+<canvas id=canvas></canvas>
+
+<script>
+const canvas = document.getElementById('canvas')
+const ctx = canvas.getContext('2d')
+const canvasRect = canvas.getBoundingClientRect()
+
+let canDraw = false
+
+canvas.width = 800
+canvas.height = 400
+
+canvas.onmousedown = mouseDown
+canvas.onmouseup = mouseUp
+canvas.onmousemove = mouseMove
+canvas.onmouseout = mouseOut
+
+function mouseDown (e) {
+  canDraw = true
+  ctx.beginPath()
+  ctx.lineWidth = 10
+  ctx.strokeStyle = 'red'
+  ctx.lineCap = ctx.lineJoin = 'round'
+  const position = getMouse2CanvasPosition({x: e.clientX, y: e.clientY})
+  ctx.moveTo(position.x, position.y)
+}
+
+function mouseUp (e) {
+  canDraw = false
+  ctx.closePath()
+}
+
+function mouseMove (e) {
+  if (!canDraw) return
+  const position = getMouse2CanvasPosition({x: e.clientX, y: e.clientY})
+  ctx.lineTo(position.x, position.y)
+  ctx.stroke()
+}
+
+function mouseOut (e) {
+  canDraw = false
+  ctx.closePath()
+}
+
+function getMouse2CanvasPosition (position) {
+  return {
+    x: position.x - canvasRect.x,
+    y: position.y -canvasRect.y
+  }
+}
+
+</script>
+
+
+</body>
+</html>
