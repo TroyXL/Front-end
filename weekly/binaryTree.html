@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>binary tree</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no">
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <meta name="description" content="" />
+  <meta name="keywords" content="" />
+
+</head>
+<body>
+
+<script>
+
+class BinaryTree {
+  constructor (array) {
+    this.root
+
+    array.forEach(item => {
+      const currentNode = new Node(item)
+      if (!this.root) {
+        this.root = currentNode
+      } else {
+        this.compileNode(currentNode, this.root)
+      }
+    })
+  }
+
+  compileNode (currentNode, parentNode) {
+    if (parentNode.val < currentNode.val) parentNode.right ? this.compileNode(currentNode, parentNode.right) : parentNode.right = currentNode
+    if (parentNode.val > currentNode.val) parentNode.left ? this.compileNode(currentNode, parentNode.left) : parentNode.left = currentNode
+  }
+
+  // 中序遍历 左-根-右
+  inOrder (cb) {
+    this._getNodeInOrder(this.root, cb)
+  }
+  _getNodeInOrder (node, cb) {
+    if (!node) return
+    this._getNodeInOrder(node.left, cb)
+    cb && cb(node.val)
+    this._getNodeInOrder(node.right, cb)
+  }
+
+  // 前序遍历 根-左-右
+  preOrder (cb) {
+    this._getNodePreOrder(this.root, cb)
+  }
+  _getNodePreOrder (node, cb) {
+    if (!node) return
+    cb && cb(node.val)
+    this._getNodePreOrder(node.left, cb)
+    this._getNodePreOrder(node.right, cb)
+  }
+
+  // 前序遍历 根-左-右
+  backOrder (cb) {
+    this._getNodeBackOrder(this.root, cb)
+  }
+  _getNodeBackOrder (node, cb) {
+    if (!node) return
+    this._getNodeBackOrder(node.left, cb)
+    this._getNodeBackOrder(node.right, cb)
+    cb && cb(node.val)
+  }
+
+  hasNode (val) {
+    // console.log(this._hasNode(this.root, val))
+    return this._hasNode(this.root, val) === val
+  }
+  _hasNode (node, val) {
+    if (!node) return
+    // console.log('---', node.val)
+    if (node.val === val) return node.val
+    if (node.val > val) return this._hasNode(node.left, val)
+    if (node.val < val) return this._hasNode(node.right, val)
+  }
+
+}
+
+class Node {
+  constructor (val) {
+    this.val = val
+    this.left
+    this.right
+  }
+}
+// console.time('binary')
+let array = []
+for (let i = 0; i < 1000000; i++) {
+  array.push(Math.round(Math.random() * 100000000))
+}
+console.time('binary')
+const binary = new BinaryTree(array)
+// console.log(binary)
+const temp = []
+
+binary.inOrder(val => {
+  // console.log(val)
+  temp.push(val)
+})
+console.timeEnd('binary')
+console.log(temp.length)
+
+console.time('sort')
+array.sort((a, b) => a - b)
+// console.log(array)
+console.timeEnd('sort')
+
+binary.preOrder(val => {
+  // console.log(val)
+})
+binary.backOrder(val => {
+  // console.log(val)
+})
+// console.log(binary.hasNode(7))
+
+</script>
+
+</body>
+</html>
