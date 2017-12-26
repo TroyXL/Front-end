@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Upload</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no">
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <meta name="description" content="" />
+  <meta name="keywords" content="" />
+  <link rel="stylesheet" href="css/uploader.css">
+</head>
+<body>
+
+<div class="thumbnails-box"></div>
+<div class="filePicker"></div>
+  <!-- <input type="file" accept="image/png,image/jpg,image/jpeg,image/gif" multiple="multiple" > -->
+
+
+
+<script src="./js/jquery-1.8.3.min.js"></script>
+<script src="./js/jquery.ui.widget.js"></script>
+<script src="./js/load-image.all.min.js"></script>
+<script src="./js/canvas-to-blob.min.js"></script>
+<script src="./js/jquery.iframe-transport.js"></script>
+<script src="./js/jquery.fileupload.js"></script>
+<script src="./js/jquery.fileupload-process.js"></script>
+<script src="./js/jquery.fileupload-image.js"></script>
+
+<script src="./js/uploader.js"></script>
+
+<script>
+var uploader = new Uploader({
+  imagePicker: '.filePicker',
+  thumbnailsBox: '.thumbnails-box',
+  multiple: true,
+  accept: 'image/jpg,image/jpeg,image/png',
+  countLimit: 9,
+  params: [{
+    name: 'dir',
+    value: 'image'
+  }],
+
+  deleteEl: '.js-delete',
+  repickEl: '.js-repick'
+})
+
+uploader.setCurrentImages([
+  'https://static.cxstore.top/images/avatar1.jpg',
+  'https://static.cxstore.top/images/avatar2.jpg',
+  'https://static.cxstore.top/images/avatar3.jpg'
+])
+
+uploader.upload()
+</script>
+
+</body>
+</html>
