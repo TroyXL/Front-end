@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+    <title>compress</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+
+</head>
+<body>
+
+<input type="file" accept="image/*" id="input">
+
+<div id="div"></div>
+
+<script>
+const $input = document.getElementById('input')
+$input.onchange = e => {
+  // 获取到第一个文件
+  const file = $input.files[0]
+  console.log('file', file)
+  // 声明一个 FileReader 实例
+  const fileReader = new FileReader()
+  // fileReader 读取完成触发的事件
+  fileReader.onload = () => {
+  const image = new Image()
+  image.onload = () => {
+    // 对 image 进行的操作
+    console.log(base64Url2Blob(compressImage(image)))
+  }
+  image.src = fileReader.result
+  console.log('fileReader', fileReader)
+}
+  // 读取 file 的内容
+  fileReader.readAsDataURL(file)
+}
+
+function compressImage (image) {
+  // 创建一个 canvas 元素并获取其上下文
+  const canvas = document.createElement('canvas')
+  const ctx = canvas.getContext('2d')
+  // 将 canvas 宽高设为原图的 1/10，即将原图宽高压缩 10 倍
+  canvas.width = image.width / 10
+  canvas.height = image.height / 10
+  // 绘制图片
+  ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height)
+
+  // document.getElementById('div').appendChild(canvas)
+
+  return canvas.toDataURL('image/jpeg', 0.1)
+}
+
+function base64Url2Blob (url) {
+  // 将base64url通过 , 分割为含有两个元素的数组
+  const temp = url.split(',')
+  // 将图片的base64编码数据解码
+  const bytes = window.atob(temp[1])
+  // 匹配图片的 mime
+  const mime = temp[0].match(/:(.*?);/)[1]
+  // 创建一个类型化数组，该数组的长度与解码后的图片数据长度相同
+  let ia = new Uint8Array(bytes.length)
+  // 变量图片数据的每一位，并将每一位的 Unicode 编码存入类型化数组
+  for (let i = 0; i < bytes.length; i++) {
+    ia[i] = bytes.charCodeAt(i)
+  }
+  // 通过类型化数组创建一个 Blob 对象
+  return new Blob([ia], {type: mime})
+}
+</script>
+
+</body>
+</html>
