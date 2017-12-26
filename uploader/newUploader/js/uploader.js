@@ -22,7 +22,7 @@
       imageQuality: 0.1, // (0, 1]
       params: [],
 
-      repickEl: '', // 针对某张图片重新选择图片的按钮元素
+      repickEl: '', // 针对某张图片重新选择图片的按钮元素 如果本身支持多选 重选图片将只会对第一张进行处理
       deleteEl: '' // 删除按钮
     }, opts);
     
@@ -84,7 +84,7 @@
     // 获取所有的图片地址
     getAllImagesUrl: function (onlySuccess) {
       if (onlySuccess) {
-        
+
       } else {
 
       }
