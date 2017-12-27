@@ -23,69 +23,70 @@
 
 
 <script src="./js/jquery-1.8.3.min.js"></script>
-<!-- <script src="./js/jquery.ui.widget.js"></script> -->
-<!-- <script src="./js/load-image.all.min.js"></script> -->
-<!-- <script src="./js/jquery.iframe-transport.js"></script> -->
 <script src="./js/uploader.dependence.js"></script>
 <script src="./js/uploader.js"></script>
 
 <script>
 
 // 注册一个获取图片地址的全局方法
+// 如果第三个参数不传入，之后需要使用 Uploader 实例调用，并且只在该实例上有效
+// 如果传入第三个参数，则不需要再单独调用，在所有实例上都有效
 Uploader.rigister('getImageUrl', function () {
   var self = this
   $(document).on('click', this.thumbTagClass, function (e) {
     e.stopPropagation()
     console.log($(this).data('src'))
   })
-}, true)
-
+})
 
 var uploader = new Uploader({
-  // url: 'http://www2.kaowola.com:8888/Record/uploadImg',
+  url: '/',
   imagePicker: '#picker1',
   thumbnailsBox: '#thumbnails-box-1',
   multiple: true,
   accept: 'image/jpg,image/jpeg,image/png',
   countLimit: 4,
   params: [{
-    name: 'activity_id',
-    value: '68'
+    name: 'dir',
+    value: 'image'
   }],
 
   deleteEl: '.js-delete',
   repickEl: '.js-repick'
 })
 
+// 通过实例 uploader 调用 getImageUrl
+// uploader.getImageUrl()
+
 uploader.setCurrentImages([
   'https://static.cxstore.top/images/avatar1.jpg',
   'https://static.cxstore.top/images/avatar2.jpg',
-  'https://static.cxstore.top/images/avatar3.jpg',
   '',
-  'https://static.cxstore.top/images/avatar1.jpg',
   'https://static.cxstore.top/images/avatar3.jpg'
 ])
 
-// 为当前上传对象扩展一个实例方法并立即执行
-// uploader.extend('testExtend', function () {
-//   e.stopPropagation();
-//   $(document).on('click', this.thumbTagClass, function (e) {
-//     alert($(this).data('src'))
-//   })
-// }, true)
+// 为当前上传对象实例扩展一个实例方法并立即执行
+// 该方法只在当前实例上存在
+uploader.extend('testExtend', function () {
+  $(document).on('click', this.thumbTagClass, function (e) {
+    e.stopPropagation();
+    console.log($(this).data('src'))
+  })
+}, true)
 
 uploader.upload()
 
+
 var uploader2 = new Uploader({
-  // url: 'http://www2.kaowola.com:8888/Record/uploadImg',
+  url: '/',
   imagePicker: '#picker2',
   thumbnailsBox: '#thumbnails-box-2',
   multiple: true,
   accept: 'image/jpg,image/jpeg,image/png',
   countLimit: 5,
   params: [{
-    name: 'activity_id',
-    value: '67'
+    name: 'dir',
+    value: 'image'
   }],
 
   deleteEl: '.js-delete',

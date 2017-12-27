@@ -1,5 +1,5 @@
 /*
- * uploader.js 整合文件
+ * uploader.js 依赖整合文件
  * - jquery.ui.widget.js
  * - load-image.all.min.js
  * - jquery.iframe-transport.js

@@ -1,21 +1,21 @@
 /*
  * @功能说明：图片上传
- * @兼容性：IE10 以下不支持客户端压缩、预览，上传成功过后可以预览
+ * @兼容性：IE10 以下不支持客户端压缩、预览（上传成功过后可以通过返回的图片地址预览），不支持限制图片大小，不支持多选（无法对文件进行处理，重选时会导致 bug）
  * @author：徐亮 l.xu2@htd.cn
  * @time: 2017-12-26
  */
 
 /*
- ************
- * Params ***
- ************
+ **************
+ *** Params ***
+ **************
  *
  * @param url {String} required 上传的地址
  * @param imagePicker {String} required 页面上用来放置 input 元素的节点选择器字符串
  * @param thumbnailsBox {String} required 页面上用来放置缩略图的节点选择器字符串
  * @param multiple {Boolean} optional 是否支持多选，，默认不支持，ie10下不支持多选
  * @param accept {String} optional 接受的图片的格式类型字符串，默认所有种类图片
- * @param imageMaxSize {Number} optional 上传图片的最大 size，默认 5Mb
+ * @param imageMaxSize {Number} optional 上传图片的最大 size，默认 5Mb，ie10下不支持
  * @param maxWidth {Int} optional 图片压缩的最大宽度，默认 600px
  * @param maxHeight {Int} optional 图片压缩的最大高度，默认 600px
  * @param imageQuality {Float} optional 图片的压缩质量，范围 (0, 1]，默认 0.1
@@ -28,12 +28,11 @@
  */
 
 /*
- ****************
- * Properties ***
- ****************
+ ******************
+ *** Properties ***
+ ******************
  *
  * @property o {Object} 当前上传对象配置
- * @property imageIndex {Int} 最后一张图片的索引
  * @property imagesLength {Int} 当前图片数量
  * @property repickIndex {Int} 重传图片索引
  * @property thumbTagClass {String} 当前上传对象的缩略图类名选择器字符串
@@ -45,9 +44,9 @@
  */
 
 /*
- **********************
- * Instance methods ***
- **********************
+ ************************
+ *** Instance methods ***
+ ************************
  *
  * @method setThumbnail 设置缩略图样式。只能重写该方法，需要返回一个 jQuery 对象作为缩略图节点
  * @method setCurrentImages 设置已经存在的图片。不支持重写，图片数量不受限制，参数为 图片地址数组{Array <String>}
@@ -56,27 +55,29 @@
  * @method uploadFail 设置上传失败样式。只能重写该方法，接受两个参数：当前缩略图节点{Object<jQuery>} 与 上传失败返回的数据/失败原因{Object}
  * @method uploadComplete 上传结束回调。只能重写该方法，不论成功失败都会调用，接受一个参数：当前缩略图节点{Object<jQuery>}
  * @method showSuccessImageOnUnsupportBrower 在不支持的浏览器上显示上传成功后的图片。只能重写该方法，如果重写 uploadSuccess 需要在重写方法中调用该方法，参数随意能显示就行
- * @method extend 扩展 Uploader 实例方法。不支持重写，接受三个参数：方法名{String} 方法执行函数{Function} 与 是否立即执行{Boolean}
+ * @method extend 扩展 Uploader 实例方法。不支持重写，接受三个参数：方法名{String} 方法执行函数{Function} 与 扩展后是否立即执行{Boolean}
  * @method upload 配置完 upload 对象后必须调用该方法激活上传
  * @method getImagesUrl 获取当前 uploader 对象的所有上传成功的图片地址数组。不支持重写，返回数组包括使用 setCurrentImages 显示的图片地址
  *
  */
 
 /*
- *******************
- * Class methods ***
- *******************
+ *********************
+ *** Class methods ***
+ *********************
  *
  * @method rigister 扩展 Uploader 实例方法。不支持重写，接受三个参数：方法名{String} 方法执行函数{Function} 与 Uploader实例化时是否立即执行{Boolean}
- * @method setSupportIeVersion 设置 Uploader 支持的 IE 最低版本。不支持重写，接受一个参数：版本号{Int}。默认 10（IE10）
  *
  */
 
 (function () {
-  var needSupport = checkBrowerDelowIE(10);
-  var thumbIdPrefix = 'IMG-UPLOAD-';
+  var IE_VARSION = 10, // 支持的 IE 最低版本
+      NEED_SUPPORT = !checkBrowerDelowIE(IE_VARSION), // 是否需要支持当前浏览器
+      THUMB_ID_PREFIX = '#IMG-UPLOAD-', // 缩略图节点 id 前缀
+      imageIndex = 0; // 图片索引
 
   var Uploader = function (opts) {
+    checkArgumentExist(['url', 'imagePicker', 'thumbnailsBox'], opts);
     // configs
     this.o = $.extend({
       url: '/', // 上传地址 required
@@ -98,7 +99,6 @@
       aliResizeSize: 180
     }, opts);
     
-    this.imageIndex = 0; // 图片索引
     this.imagesLength = 0; // 当前图片数量
     this.repickIndex = -1; // 重传图片索引
     this.thumbTagClass = '.' + (this.o.thumbnailsBox + '-item').substring(1).toUpperCase(); // 缩略图类名
@@ -118,7 +118,7 @@
     this.setThumbnail = function () {
       return $(
         '<div class="img-box">' +
-          '<img>' +
+          '<img alt="无法预览">' +
           '<span class="process"></span>' +
           '<a href="javascript:;" class="delete js-delete"></a>' +
           '<a href="javascript:;" class="repick js-repick">重传</a>' +
@@ -131,8 +131,8 @@
       var index = 0;
       for (var i = 0; i < imagesArr.length; i ++) {
         if(!imagesArr[i]) continue;
-        this._showPreviewImage(imagesArr[i], imagesArr[i], this.imageIndex);
-        this.imageIndex++;
+        this._showPreviewImage(imagesArr[i], imagesArr[i], imageIndex);
+        imageIndex++;
         this.imagesLength++;
       }
       this._toggleInput();
@@ -162,7 +162,7 @@
 
     // 上传成功后，在不支持显示缩略图的浏览器上显示上传的图片
     this.showSuccessImageOnUnsupportBrower = function ($el, imageUrl) {
-      if (!needSupport) {
+      if (!NEED_SUPPORT) {
         $el.find('img').attr('src', imageUrl + this.o.isAliCloud ? this.aliCloudResizeString : '');
       }
     }
@@ -185,7 +185,6 @@
 
       self._deleteImage();
       self._repickImage();
-      self._activeExtends();
     },
 
     // 获取所有上传成功的图片地址
@@ -206,7 +205,7 @@
         .addClass(this.thumbTagClass.substring(1))
         .attr({
           'data-src': imageUrl,
-          'id': thumbIdPrefix + id
+          'id': THUMB_ID_PREFIX.substring(1) + id
         })
         .find('img')
         .attr('src', imageSrc);
@@ -254,7 +253,7 @@
     // 监听 input change 事件
     _watchInputChange: function (cb) {
       var self = this;
-      if (needSupport) {
+      if (NEED_SUPPORT) {
         $(document).on('change', '#' + self.$inputBox.data('input'), function (e) {
           // 重选时 只获取第一个文件
           var fileList = self.repickIndex == -1 ? this.files : [this.files[0]]
@@ -269,10 +268,13 @@
             (function (index) {
               loadImage(
                 file,
-                function (img) {
-                  var imgSrc = img.toDataURL('jpeg', self.o.imageQuality);
+                function (canvas) {
+                  var imgSrc = canvas.toDataURL('jpeg', self.o.imageQuality);
                   cb && cb(imgSrc, index);
-                  self._sendImage(convertBase64UrlToBlob(imgSrc), index);
+                  // self._sendImage(convertBase64UrlToBlob(imgSrc), index);
+                  canvas.toBlob(function (blob) {
+                    self._sendImage(blob, index);
+                  }, 'image/jpeg', self.o.imageQuality)
                 },
                 {
                   maxWidth: self.o.maxWidth,
@@ -280,7 +282,7 @@
                   canvas: true
                 }
               )
-            }(self.imageIndex));
+            }(imageIndex));
 
             
             if (self.imagesLength >= self.o.countLimit) break;
@@ -301,7 +303,7 @@
     // 传输图片
     _sendImage: function (file, id) {
       var self = this;
-      var $thumb = $('#' + thumbIdPrefix + id);
+      var $thumb = $(THUMB_ID_PREFIX + id);
 
       self.$input.fileupload({
         url : self.o.url,
@@ -345,13 +347,13 @@
           return self.o.params
         },
         add: function (e, data) {
-          id = self.imageIndex++;
+          id = imageIndex++;
           self.imagesLength++;
-          $thumb = $('#' + thumbIdPrefix + id);
           self._showPreviewImage('', '', id);
           self._toggleInput();
           self._resetInput();
           self._ieSendImage();
+          $thumb = $(THUMB_ID_PREFIX + id);
           data.submit()
             .success(function (result, textStatus, jqXHR) {
               var data = JSON.parse(result);
@@ -371,15 +373,6 @@
           self.uploadProgress($thumb, progress);
         }
       });
-    },
-
-    // 激活扩展的全局方法
-    _activeExtends: function () {
-      for (var k in Uploader.prototype._extend) {
-        var f = Uploader.prototype._extend[k]
-        Uploader.prototype[k] = f.func
-        if (f.immediately) f.func.call(this);
-      }
     },
 
     // 扩展的方法
@@ -407,7 +400,8 @@
       position: 'absolute',
       width: '100%',
       height: '100%',
-      filter: 'opacity(0)'
+      opacity: '0',
+      filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=0)'
     })
     $el.css('position', 'relative').append($input);
     return $input;
@@ -437,20 +431,26 @@
     return false;
   }
 
+  function checkArgumentExist (argArr, obj) {
+    var temp = [];
+    for (var i = 0; i < argArr.length; i++) {
+      var k = argArr[i];
+      if (!obj.hasOwnProperty(k) || !obj[k]) {
+        temp.push(k);
+      }
+    }
+    if (temp.length) throw new Error('arguments missing: ' + temp.join(', '));
+  }
+
   // 将 Uploader 挂载到全局
   window.Uploader = Uploader;
 
   // Uploader 全局扩展方法
   window.Uploader.rigister = function (fnName, func, immediately) {
     if (duplicateMethodName(fnName, Uploader.prototype)) return;
-    Uploader.prototype._extend[fnName] = {
-      func: func,
-      immediately: !!immediately
-    }
+    Uploader.prototype = $.extend(Uploader.prototype, {
+      [fnName]: func
+    });
+    if (immediately) func.call(Uploader);
   }
-
-  // 设置支持的 IE 最低版本
-  window.Uploader.setSupportIeVersion = function (version) {
-    needSupport = !checkBrowerDelowIE(version);
-  };
 }());
