@@ -39,7 +39,7 @@
 
 .repick{
 	position: absolute;
-	bottom: 10px;
+	bottom: 30px;
 	left: 15px;
 	width: 50px;
 	height: 24px;
@@ -71,7 +71,7 @@
   background: rgba(29,185,106,.5);
 }
 
-.error{
+.fail{
 	width: 100%;
   background: rgba(255,0,0,.5);
 }

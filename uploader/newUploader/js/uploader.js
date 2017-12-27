@@ -29,12 +29,12 @@
     this.imageIndex = 0; // 图片索引
     this.imagesLength = 0; // 当前图片数量
     this.repickIndex = -1; // 重传图片索引
-    this.thumbTagClass = (this.o.thumbnailsBox + '-item').toUpperCase(); // 缩略图类名
+    this.thumbTagClass = '.' + (this.o.thumbnailsBox + '-item').substring(1).toUpperCase(); // 缩略图类名
 
     // filePicker
     this.$input;
     // filePicker box
-    this.$inputBox = $(this.o.imagePicker);
+    this.$inputBox = $(this.o.imagePicker).attr('data-input', 'INPUT-' + Math.random().toString(32).substring(2).toUpperCase());
     if (this.$inputBox) this.$input = createFilePicker(this.$inputBox, this.o.multiple, this.o.accept);
     // thumbnail box
     this.$thumbnailsBox = $(this.o.thumbnailsBox);
@@ -46,6 +46,7 @@
       return $(
         '<div class="img-box">' +
           '<img>' +
+          '<span class="process"></span>' +
           '<a href="javascript:;" class="delete js-delete"></a>' +
           '<a href="javascript:;" class="repick js-repick">重传</a>' +
         '</div>'
@@ -64,8 +65,41 @@
       this._toggleInput();
     }
 
-    // 扩展方法
-    // this.extend = function ($el)
+    this.uploadProgress = function ($el, progress) {
+      $el.find('.process').css('width', progress + '%');
+    }
+
+    this.uploadSuccess = function ($el, data) {
+      $el.attr('upload-success', '')
+        .attr('data-src', data.url)
+        .find('.process')
+        .addClass('success')
+        .text('上传成功');
+      this.showSuccessImageOnIE8();
+    }
+
+    this.uploadFail = function ($el, data) {
+      $el.attr('upload-fail', '')
+        .find('.process')
+        .addClass('fail')
+        .text('上传失败');
+    }
+
+    this.uploadComplete = function ($el) {
+      console.log('上传完成');
+    }
+
+    this.showSuccessImageOnIE8 = function ($el, imageUrl) {
+      if (!needSupport) {
+        $el.find('img').attr('src', imageUrl);
+      }
+    }
+
+    this.extend = function (fnName, func) {
+      this[fnName] = func;
+      func.call(this)
+    }
+
   }
 
   Uploader.prototype = {
@@ -79,14 +113,22 @@
 
       self._deleteImage();
       self._repickImage();
+      self._activeExtends();
     },
 
-    // 获取所有的图片地址
-    getAllImagesUrl: function (onlySuccess) {
-      if (onlySuccess) {
+    // 获取所有上传成功的图片地址
+    getImagesUrl: function () {
+      var urls = [];
+      var $thumbs = $('[upload-success]');
+      for (var i = 0; i < $thumbs.length; i++) {
+        urls.push($($thumbs[i]).attr('data-src'));
+      }
+      return urls;
+    },
 
-      } else {
-
+    _activeExtends: function () {
+      for (var k in Uploader.prototype._extend) {
+        Uploader.prototype._extend[k].call(this);
       }
     },
 
@@ -102,6 +144,7 @@
         })
         .find('img')
         .attr('src', imageSrc);
+      if (imageUrl) $box.attr('upload-success', '');
       if (this.repickIndex == -1) {
         this.$thumbnailsBox.append($box);
       } else {
@@ -114,7 +157,9 @@
     _deleteImage: function () {
       if (!this.o.deleteEl) return;
       var self = this;
-      $(document).on('click', self.o.deleteEl, function () {
+      $(document).on('click', self.thumbTagClass + ' ' + self.o.deleteEl, function (e) {
+        e.preventDefault();
+        e.stopPropagation();
         $(this).parents(self.thumbTagClass).remove();
         self.imagesLength--;
         self._toggleInput();
@@ -125,9 +170,9 @@
     _repickImage: function () {
       if (!this.o.repickEl) return;
       var self = this;
-      
-      $(document).on('click', self.o.repickEl, function () {
-        // self.$input.removeAttr('multiple'); // 移除多选属性
+      $(document).on('click', self.thumbTagClass + ' ' + self.o.repickEl, function (e) {
+        e.preventDefault();
+        e.stopPropagation();
         self.repickIndex = $(this).parents(self.thumbTagClass).index();
         self.$input.click();
       });
@@ -142,7 +187,7 @@
     // 监听 input change 事件
     _watchInputChange: function (cb) {
       var self = this;
-      $(document).on('change', self.$input, function (e) {
+      $(document).on('change', '#' + self.$inputBox.data('input'), function (e) {
         // 重选时 只获取第一个文件
         var fileList = self.repickIndex == -1 ? e.target.files : [e.target.files[0]]
         for (var i = 0; i < fileList.length; i ++) {
@@ -187,6 +232,7 @@
     // 传输图片
     _sendImage: function (file, id) {
       var self = this;
+      var $thumb = $('#' + thumbIdPrefix + id);
 
       self.$input.fileupload({
         url : self.o.url,
@@ -196,8 +242,8 @@
           return self.o.params
         },
         progressall : function (e, data) {
-          var process = parseInt((data.loaded / data.total) * 100);
-          // Uploader.uploadProcess(options.fileID, options.fileName, process);
+          var progress = parseInt((data.loaded / data.total) * 100);
+          self.uploadProgress($thumb, progress);
         }
       });
 
@@ -207,16 +253,18 @@
       }).success(function (result, textStatus, jqXHR) {
         var data = JSON.parse(result);
         if (data.status == 1) {
-          // Uploader.uploadSuccess(options.fileID, options.fileName, data.url);
+          self.uploadSuccess($thumb, data);
         } else {
-          // Uploader.uploadError(options.fileID, options.fileName, data.message);
+          self.uploadFail($thumb, data);
         }
       }).error(function (jqXHR, textStatus, errorThrown) {
-        // Uploader.uploadError(options.fileID, options.fileName, jqXHR);
+        self.uploadFail($thumb, jqXHR);
       }).complete(function (result, textStatus, jqXHR) {
-        // Uploader.uploadComplete(options.fileID, options.fileName);
+        self.uploadComplete($thumb);
       });
-    }
+    },
+
+    _extend: {}
   }
 
   // 检测浏览器版本
@@ -231,7 +279,10 @@
   // 创建 filePicker
   function createFilePicker ($el, multiple, accept) {
     var $input = $('<input type="file" />');
-    $input.attr('accept', accept ? 'image/*' : accept);
+    $input.attr({
+      'id': $el.data('input'),
+      'accept': accept ? 'image/*' : accept
+    });
     if (multiple) $input.attr('multiple', 'multiple');
     $input.css({
       position: 'absolute',
@@ -256,4 +307,9 @@
 
   // 将 Uploader 挂载到全局
   window.Uploader = Uploader;
+
+  // Uploader 全局扩展方法
+  window.Uploader.rigister = function (fnName, func) {
+      Uploader.prototype._extend[fnName] = func
+    }
 }());

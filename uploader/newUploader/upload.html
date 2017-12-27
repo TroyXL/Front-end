@@ -14,8 +14,11 @@
 </head>
 <body>
 
-<div class="thumbnails-box"></div>
-<div class="filePicker"></div>
+<div id="thumbnails-box-1"></div>
+<div class="filePicker" id="picker1"></div>
+<br>
+<div id="thumbnails-box-2"></div>
+<div class="filePicker" id="picker2"></div>
   <!-- <input type="file" accept="image/png,image/jpg,image/jpeg,image/gif" multiple="multiple" > -->
 
 
@@ -32,9 +35,19 @@
 <script src="./js/uploader.js"></script>
 
 <script>
+// 注册一个获取图片地址的全局方法
+Uploader.rigister('getImageUrl', function () {
+  var self = this
+  $(document).on('click', this.thumbTagClass, function (e) {
+    e.stopPropagation();
+    console.log($(this).data('src'))
+  })
+})
+
+
 var uploader = new Uploader({
-  imagePicker: '.filePicker',
-  thumbnailsBox: '.thumbnails-box',
+  imagePicker: '#picker1',
+  thumbnailsBox: '#thumbnails-box-1',
   multiple: true,
   accept: 'image/jpg,image/jpeg,image/png',
   countLimit: 9,
@@ -54,6 +67,29 @@ uploader.setCurrentImages([
 ])
 
 uploader.upload()
+
+var uploader2 = new Uploader({
+  imagePicker: '#picker2',
+  thumbnailsBox: '#thumbnails-box-2',
+  multiple: true,
+  accept: 'image/jpg,image/jpeg,image/png',
+  countLimit: 9,
+  params: [{
+    name: 'dir',
+    value: 'image'
+  }],
+
+  deleteEl: '.js-delete',
+  repickEl: '.js-repick'
+})
+
+uploader2.setCurrentImages([
+  'https://static.cxstore.top/images/avatar1.jpg',
+  'https://static.cxstore.top/images/avatar2.jpg',
+  'https://static.cxstore.top/images/avatar3.jpg'
+])
+
+uploader2.upload()
 </script>
 
 </body>
