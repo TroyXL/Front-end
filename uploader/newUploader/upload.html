@@ -19,41 +19,38 @@
 <br>
 <div id="thumbnails-box-2"></div>
 <div class="filePicker" id="picker2"></div>
-  <!-- <input type="file" accept="image/png,image/jpg,image/jpeg,image/gif" multiple="multiple" > -->
 
 
 
 <script src="./js/jquery-1.8.3.min.js"></script>
-<script src="./js/jquery.ui.widget.js"></script>
-<script src="./js/load-image.all.min.js"></script>
-<script src="./js/canvas-to-blob.min.js"></script>
-<script src="./js/jquery.iframe-transport.js"></script>
-<script src="./js/jquery.fileupload.js"></script>
-<script src="./js/jquery.fileupload-process.js"></script>
-<script src="./js/jquery.fileupload-image.js"></script>
-
+<!-- <script src="./js/jquery.ui.widget.js"></script> -->
+<!-- <script src="./js/load-image.all.min.js"></script> -->
+<!-- <script src="./js/jquery.iframe-transport.js"></script> -->
+<script src="./js/uploader.dependence.js"></script>
 <script src="./js/uploader.js"></script>
 
 <script>
+
 // 注册一个获取图片地址的全局方法
 Uploader.rigister('getImageUrl', function () {
   var self = this
   $(document).on('click', this.thumbTagClass, function (e) {
-    e.stopPropagation();
+    e.stopPropagation()
     console.log($(this).data('src'))
   })
-})
+}, true)
 
 
 var uploader = new Uploader({
+  // url: 'http://www2.kaowola.com:8888/Record/uploadImg',
   imagePicker: '#picker1',
   thumbnailsBox: '#thumbnails-box-1',
   multiple: true,
   accept: 'image/jpg,image/jpeg,image/png',
-  countLimit: 9,
+  countLimit: 4,
   params: [{
-    name: 'dir',
-    value: 'image'
+    name: 'activity_id',
+    value: '68'
   }],
 
   deleteEl: '.js-delete',
@@ -63,20 +60,32 @@ var uploader = new Uploader({
 uploader.setCurrentImages([
   'https://static.cxstore.top/images/avatar1.jpg',
   'https://static.cxstore.top/images/avatar2.jpg',
+  'https://static.cxstore.top/images/avatar3.jpg',
+  '',
+  'https://static.cxstore.top/images/avatar1.jpg',
   'https://static.cxstore.top/images/avatar3.jpg'
 ])
+
+// 为当前上传对象扩展一个实例方法并立即执行
+// uploader.extend('testExtend', function () {
+//   e.stopPropagation();
+//   $(document).on('click', this.thumbTagClass, function (e) {
+//     alert($(this).data('src'))
+//   })
+// }, true)
 
 uploader.upload()
 
 var uploader2 = new Uploader({
+  // url: 'http://www2.kaowola.com:8888/Record/uploadImg',
   imagePicker: '#picker2',
   thumbnailsBox: '#thumbnails-box-2',
   multiple: true,
   accept: 'image/jpg,image/jpeg,image/png',
-  countLimit: 9,
+  countLimit: 5,
   params: [{
-    name: 'dir',
-    value: 'image'
+    name: 'activity_id',
+    value: '67'
   }],
 
   deleteEl: '.js-delete',
@@ -90,6 +99,15 @@ uploader2.setCurrentImages([
 ])
 
 uploader2.upload()
+
+// var input = $('input')
+// input.fileupload({
+//         url : '/test',
+//         paramName: 'files',
+//         sequentialUploads : true,
+//         autoUpload : true
+//       });
+// console.log(input)
 </script>
 
 </body>
