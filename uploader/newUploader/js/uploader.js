@@ -1,6 +1,7 @@
 /*
  * @功能说明：图片上传
  * @兼容性：IE10 以下不支持客户端压缩、预览（上传成功过后可以通过返回的图片地址预览），不支持限制图片大小，不支持多选（无法对文件进行处理，重选时会导致 bug）
+ * @dependence: jquery 1.8.3 | jquery.ui.widget.js | jquery.iframe-transport.js | jquery.fileupload.js
  * @author：徐亮 l.xu2@htd.cn
  * @time: 2017-12-26
  */
@@ -36,7 +37,8 @@
  * @property imagesLength {Int} 当前图片数量
  * @property repickIndex {Int} 重传图片索引
  * @property thumbTagClass {String} 当前上传对象的缩略图类名选择器字符串
- * @property $input {Object} 当前上传按钮的 jQuery 对象
+ * @property $input {Object} 当前主上传按钮的 jQuery 对象
+ * @property inputTag {String} 所有 input 的 class，也是主上传按钮的 id
  * @property $inputBox {Object} 当前上传按钮父级（配置中的 imagePicker）的 jQuery 对象
  * @property $thumbnailsBox {Object} 放置缩略图的容器（配置中的 thumbnailsBox）的 jQuery 对象
  * @property aliCloudResizeString {String} 阿里云图片url压缩参数字符串
@@ -105,9 +107,11 @@
 
     // filePicker
     this.$input;
+    // input els tag
+    this.inputTag = 'INPUT-' + Math.random().toString(32).substring(2).toUpperCase();
     // filePicker box
-    this.$inputBox = $(this.o.imagePicker).attr('data-input', 'INPUT-' + Math.random().toString(32).substring(2).toUpperCase());
-    if (this.$inputBox) this.$input = createFilePicker(this.$inputBox, this.o.multiple, this.o.accept);
+    this.$inputBox = $(this.o.imagePicker);
+    if (this.$inputBox) this.$input = createFilePicker(this.$inputBox, this.inputTag, this.o.multiple, this.o.accept, true);
     // thumbnail box
     this.$thumbnailsBox = $(this.o.thumbnailsBox);
     // 阿里云服务器获取图片压缩参数
@@ -179,10 +183,7 @@
 
     upload: function () {
       var self = this;
-      self._watchInputChange(function (img, id) {
-        self._showPreviewImage('', img, id)
-      })
-
+      self._watchInputChange();
       self._deleteImage();
       self._repickImage();
     },
@@ -209,6 +210,7 @@
         })
         .find('img')
         .attr('src', imageSrc);
+
       if (imageUrl) $box.attr('upload-success', '');
       if (this.repickIndex == -1) {
         this.$thumbnailsBox.append($box);
@@ -216,6 +218,17 @@
         $(this.thumbTagClass).eq(this.repickIndex).after($box).remove();
         this.repickIndex = -1;
       }
+
+      // 如果存在重传按钮，为这个按钮添加 input
+      // 由于 ie8 不支持通过另一个元素触发 input 上传，且无法监听 input 选择文件的取消事件（会导致重传 bug）
+      // 因此为每个重选按钮单独配置一个 input
+      var $repick = $box.find(this.o.repickEl);
+      if ($repick.length) {
+        // 重传只支持单选
+        createFilePicker($repick, this.inputTag, false, this.o.accept, false);
+      }
+
+      return $box;
     },
 
     // 删除图片
@@ -235,13 +248,19 @@
     _repickImage: function () {
       if (!this.o.repickEl) return;
       var self = this;
-      $(document).on('click', self.thumbTagClass + ' ' + self.o.repickEl, function (e) {
-        e.preventDefault();
-        e.stopPropagation();
+      $(document).on('click', self.thumbTagClass + ' ' + self.o.repickEl + ' .' + self.inputTag, function (e) {
+        e.stopPropagation()
         self.imagesLength--;
         self.repickIndex = $(this).parents(self.thumbTagClass).index();
-        self.$input.click();
       });
+    },
+
+    // 当点击重选但是并未选择图片时，再点击主按钮会出现bug，需要清除 repickIndex
+    _clearRepickIndex: function () {
+      var self = this;
+      $(document).on('click', '#' + self.inputTag, function () {
+        self.repickIndex = -1;
+      })
     },
 
     //  input 的隐藏与显示
@@ -253,8 +272,9 @@
     // 监听 input change 事件
     _watchInputChange: function (cb) {
       var self = this;
+      self._clearRepickIndex();
       if (NEED_SUPPORT) {
-        $(document).on('change', '#' + self.$inputBox.data('input'), function (e) {
+        $(document).on('change', '.' + self.inputTag, function (e) {
           // 重选时 只获取第一个文件
           var fileList = self.repickIndex == -1 ? this.files : [this.files[0]]
 
@@ -264,53 +284,74 @@
               alert('图片最大尺寸为 ' + self.o.imageMaxSize + 'Mb')
               continue;
             }
+
+            if (self.imagesLength >= self.o.countLimit) break;
             
-            (function (index) {
-              loadImage(
-                file,
-                function (canvas) {
-                  var imgSrc = canvas.toDataURL('jpeg', self.o.imageQuality);
-                  cb && cb(imgSrc, index);
-                  // self._sendImage(convertBase64UrlToBlob(imgSrc), index);
-                  canvas.toBlob(function (blob) {
-                    self._sendImage(blob, index);
-                  }, 'image/jpeg', self.o.imageQuality)
-                },
-                {
-                  maxWidth: self.o.maxWidth,
-                  maxHeight: self.o.maxHeight,
-                  canvas: true
-                }
-              )
+            (function (id) {
+              self._loadImage(file, function (canvas) {
+                var imgSrc = canvas.toDataURL('image/jpeg', self.o.imageQuality);
+                var $thumb = self._showPreviewImage('', imgSrc, id);
+                self._sendImage(convertBase64UrlToBlob(imgSrc), $thumb);
+              });
             }(imageIndex));
 
-            
-            if (self.imagesLength >= self.o.countLimit) break;
+            imageIndex++;
+            self.imagesLength++;
+            self._toggleInput();
           }
-          self._toggleInput();
+          
           self._resetInput();
         });
-      } else { // ie8 直接上传图片 不做预览和压缩处理
-        self._ieSendImage()
+      } else { // ie9 直接上传图片 不做预览和压缩处理
+        self._ieSendImage();
       }
     },
 
-    _resetInput () {
+    // 读取文件并转为图片对象
+    _loadImage: function (file, cb) {
+      var self = this;
+      var fr = new FileReader();
+      fr.onload = function () {
+        var img = new Image();
+        img.onload = function () {
+          self._image2Canvas(img, cb)
+        }
+        img.src = fr.result;
+      }
+      fr.readAsDataURL(file);
+    },
+
+    // 对图片通过 canvas 进行压缩
+    _image2Canvas: function (img, cb) {
+      var canvas = document.createElement('canvas');
+      var ctx = canvas.getContext('2d');
+      // 计算 canvas 宽高
+      if (img.width > img.height) {
+        canvas.width = this.o.maxWidth;
+        canvas.height = img.height / (img.width / this.o.maxWidth);
+      } else {
+        canvas.height = this.o.maxHeight;
+        canvas.width = img.width / (img.height / this.o.maxHeight);
+      }
+      ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);
+      cb && cb(canvas);
+    },
+
+    _resetInput: function () {
       this.$inputBox.empty();
-      this.$input = createFilePicker(this.$inputBox, this.o.multiple, this.o.accept);
+      this.$input = createFilePicker(this.$inputBox, this.inputTag, this.o.multiple, this.o.accept, true);
     },
 
     // 传输图片
-    _sendImage: function (file, id) {
+    _sendImage: function (file, $thumb) {
       var self = this;
-      var $thumb = $(THUMB_ID_PREFIX + id);
-
-      self.$input.fileupload({
+      var $inputs = $('.' + self.inputTag);
+      $inputs.fileupload({
         url : self.o.url,
         sequentialUploads : true,
         autoUpload : false,
         formData : function () {
-          return self.o.params
+          return self.o.params;
         },
         progressall : function (e, data) {
           var progress = parseInt((data.loaded / data.total) * 100);
@@ -319,7 +360,7 @@
       });
 
       // 上传
-      self.$input.fileupload('send', {
+      $inputs.fileupload('send', {
         files: [file]
       }).success(function (result, textStatus, jqXHR) {
         var data = JSON.parse(result);
@@ -338,24 +379,25 @@
     _ieSendImage: function () {
       var self = this;
       var id, $thumb;
-
-      self.$input.fileupload({
+      var $inputs = $('.' + self.inputTag);
+      $inputs.fileupload({
         url : self.o.url,
         paramName: 'files',
-        autoUpload : true,
+        autoUpload : false,
         formData : function () {
           return self.o.params
         },
         add: function (e, data) {
           id = imageIndex++;
           self.imagesLength++;
-          self._showPreviewImage('', '', id);
-          self._toggleInput();
-          self._resetInput();
-          self._ieSendImage();
-          $thumb = $(THUMB_ID_PREFIX + id);
+          $thumb = self._showPreviewImage('', '', id);
+
           data.submit()
             .success(function (result, textStatus, jqXHR) {
+              if (!result) {
+                self.uploadFail($thumb, jqXHR);
+                return
+              }
               var data = JSON.parse(result);
               if (data.status == 1) {
                 self.uploadSuccess($thumb, data);
@@ -367,16 +409,17 @@
             }).complete(function (result, textStatus, jqXHR) {
               self.uploadComplete($thumb);
             });
+
+          self._toggleInput();
+          self._resetInput();
+          self._ieSendImage();
         },
         progressall: function(e, data) {
           var progress = parseInt((data.loaded / data.total) * 100);
           self.uploadProgress($thumb, progress);
         }
       });
-    },
-
-    // 扩展的方法
-    _extend: {}
+    }
   }
 
   // 检测浏览器版本
@@ -384,30 +427,11 @@
     if (navigator.appName != "Microsoft Internet Explorer") return false;
 
     var v = Number(navigator.appVersion.split(";")[1].replace(/[ ]/g,"").substring(4));
-    if (v > version) return false
+    if (v > version - 1) return false
     return true
   }
 
-  // 创建 filePicker
-  function createFilePicker ($el, multiple, accept) {
-    var $input = $('<input type="file" />');
-    $input.attr({
-      'id': $el.data('input'),
-      'accept': accept ? 'image/*' : accept
-    });
-    if (multiple) $input.attr('multiple', 'multiple');
-    $input.css({
-      position: 'absolute',
-      width: '100%',
-      height: '100%',
-      opacity: '0',
-      filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=0)'
-    })
-    $el.css('position', 'relative').append($input);
-    return $input;
-  }
-
-  // base64转为blob对象
+  // base64转为blob对象 IE不支持 canvas.toBlob()方法
   function convertBase64UrlToBlob (urlData) {
     var bytes = window.atob(urlData.split(',')[1]),
         ab = new ArrayBuffer(bytes.length),
@@ -418,6 +442,35 @@
     var file = new Blob([ab], {type : 'image/jpeg'});
     file.name = Math.random().toString(32).substring(2) + '.jpeg';
     return file;
+  }
+
+  // 创建 filePicker
+  function createFilePicker ($el, tag, multiple, accept, isMainInput) {
+    var $input = $('<input type="file" />');
+    $input.addClass(tag);
+    $input.attr('accept', accept ? 'image/*' : accept);
+
+    // 主上传按钮
+    if (isMainInput) {
+      $input.attr('id', tag);
+      // 支持的浏览器下才可以多选
+      if (multiple && NEED_SUPPORT) $input.attr('multiple', 'multiple');
+    }
+    
+    $input.css({
+      position: 'absolute',
+      width: '100%',
+      height: '100%',
+      left: 0,
+      top: 0,
+      opacity: 0,
+      filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=0)'
+    })
+
+    if ($el.css('position') === 'static') $el.css('position', 'relative');
+    $el.append($input);
+    // 如果当前是主上传按钮则返回该按钮
+    if (isMainInput ) return $input;
   }
 
   // 检查是否有重名方法
@@ -431,10 +484,11 @@
     return false;
   }
 
-  function checkArgumentExist (argArr, obj) {
+  // 检查必要参数是否存在
+  function checkArgumentExist (requiredArrs, obj) {
     var temp = [];
-    for (var i = 0; i < argArr.length; i++) {
-      var k = argArr[i];
+    for (var i = 0; i < requiredArrs.length; i++) {
+      var k = requiredArrs[i];
       if (!obj.hasOwnProperty(k) || !obj[k]) {
         temp.push(k);
       }
@@ -448,9 +502,9 @@
   // Uploader 全局扩展方法
   window.Uploader.rigister = function (fnName, func, immediately) {
     if (duplicateMethodName(fnName, Uploader.prototype)) return;
-    Uploader.prototype = $.extend(Uploader.prototype, {
-      [fnName]: func
-    });
+    var temp = {};
+    temp[fnName] = func;
+    Uploader.prototype = $.extend(Uploader.prototype, temp);
     if (immediately) func.call(Uploader);
   }
 }());

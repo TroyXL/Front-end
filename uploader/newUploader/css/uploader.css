@@ -61,10 +61,10 @@
 
 .success{
 	width: 100%;
-  background: rgba(29,185,106,.5);
+  background: #4EEE94;
 }
 
 .fail{
 	width: 100%;
-  background: rgba(255,0,0,.5);
+  background: #FF7256;
 }

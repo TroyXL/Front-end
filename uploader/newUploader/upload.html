@@ -22,7 +22,7 @@
 
 
 
-<script src="./js/jquery-1.8.3.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery/1.8.3/jquery.min.js"></script>
 <script src="./js/uploader.dependence.js"></script>
 <script src="./js/uploader.js"></script>
 
@@ -60,7 +60,7 @@ var uploader = new Uploader({
 
 uploader.setCurrentImages([
   'https://static.cxstore.top/images/avatar1.jpg',
-  'https://static.cxstore.top/images/avatar2.jpg',
+  // 'https://static.cxstore.top/images/avatar2.jpg',
   '',
   'https://static.cxstore.top/images/avatar3.jpg'
 ])
@@ -75,6 +75,9 @@ uploader.extend('testExtend', function () {
 }, true)
 
 uploader.upload()
+
+// 获取所有上传成功的图片地址
+uploader.getImagesUrl()
 
 
 var uploader2 = new Uploader({
@@ -96,19 +99,13 @@ var uploader2 = new Uploader({
 uploader2.setCurrentImages([
   'https://static.cxstore.top/images/avatar1.jpg',
   'https://static.cxstore.top/images/avatar2.jpg',
-  'https://static.cxstore.top/images/avatar3.jpg'
+  'https://static.cxstore.top/images/avatar3.jpg',
+  'https://static.cxstore.top/images/avatar1.jpg'
 ])
 
 uploader2.upload()
 
-// var input = $('input')
-// input.fileupload({
-//         url : '/test',
-//         paramName: 'files',
-//         sequentialUploads : true,
-//         autoUpload : true
-//       });
-// console.log(input)
+
 </script>
 
 </body>
