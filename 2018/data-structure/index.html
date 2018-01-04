@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>数据结构</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no">
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <meta name="description" content="" />
+  <meta name="keywords" content="" />
+
+</head>
+<body>
+
+<script src="queue.js"></script>
+<script>
+// 环形队列 demo
+let queue = new CircleQueue(5)
+queue.push(1)
+queue.push(2)
+queue.push(3)
+queue.push(4)
+queue.push(5)
+queue.push(6)
+queue.push(7)
+queue.travel()
+console.log('')
+
+queue.shift()
+queue.travel()
+console.log('')
+
+queue.shift()
+queue.travel()
+console.log('')
+
+queue.push(1)
+queue.shift()
+queue.travel()
+console.log('')
+
+queue.push(2)
+queue.travel()
+</script>
+
+</body>
+</html>
