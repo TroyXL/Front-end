@@ -51,7 +51,7 @@ class CircleQueue {
   // 遍历所有元素
   travel (cb) {
     for (let i = this.head; i < this.length + this.head; i++) {
-      cb & cb(this.queue[i % this.capacity])
+      cb && cb(this.queue[i % this.capacity])
     }
   }
 }
