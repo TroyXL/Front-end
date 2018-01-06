@@ -32,12 +32,14 @@ class CircleQueue {
     // 判断队列是否为空
     // 如果为空则返回
     if (this.isEmpty()) return
-    // 将队头移除(置空)
+    // 获取对头并将队头移除(置空)
+    let temp = this.queue[this.head]
     this.queue[this.head] = null
     this.length--
     // 修改队头
     // 先将原队头+1并对容量取余，防止队头超出数组长度，实现环形队列的队头
     this.head = ++this.head % this.capacity
+    return temp
   }
 
   // 判断是否已满
