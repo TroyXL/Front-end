@@ -1,11 +1,15 @@
 // 环形队列
 class CircleQueue {
   constructor (capacity = 0) {
+    this.capacity = capacity // 容量
+    this.clear()
+  }
+
+  // 清空队列
+  clear () {
     this.head = 0 // 队头
     this.tail = 0 // 队尾
-    this.capacity = capacity // 容量
     this.length = 0 // 队列长度
-
     this.queue = []
   }
 
