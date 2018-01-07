@@ -2,11 +2,11 @@
 class CircleQueue {
   constructor (capacity = 0) {
     this.capacity = capacity // 容量
-    this.clear()
+    this.clean()
   }
 
   // 清空队列
-  clear () {
+  clean () {
     this.head = 0 // 队头
     this.tail = 0 // 队尾
     this.length = 0 // 队列长度
