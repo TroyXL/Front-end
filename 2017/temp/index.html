@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=0.5, user-scalable=0, minimum-scale=0.5, maximum-scale=0.5"> -->
+    <title>canvas-dots-lines</title>
+</head>
+<body>
+
+<style>
+    *{margin: 0; padding: 0; box-sizing: border-box;}
+
+    #wonder{
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        left: 9;
+        top: 0;
+        background: url(starsky.jpg) no-repeat;
+        background-size: cover;
+        background-position: center center;
+    }
+</style>
+
+<div id="wonder"></div>
+
+<script src="Wonder.js"></script>
+
+<script>
+/**
+ * el {String} 元素id或class
+ * dotsNumber {Int} 初始化时页面上点的数量，如不传将根据绘制面积控制点的数量
+ * lineMaxLength {Int} 两点之间最大的连接线长度，默认：250
+ * dotsAlpha {Float} 点的透明度，取值范围 (0,1]，默认：0.8
+ * speed {Float} 点的移动速度，取值范围：大于0，默认：2
+ * clickWithDotsNumber {Int} 每次点击产生的点的数量，默认：5
+ */
+new Wonder({
+    el: '#wonder',
+    dotsNumber: 100,
+    lineMaxLength: 300,
+    dotsAlpha: .5,
+    speed: 1.5,
+    clickWithDotsNumber: 5
+})
+</script>
+
+
+</body>
+</html>
