@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>wave</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no">
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <meta name="description" content="" />
+  <meta name="keywords" content="" />
+
+</head>
+<body>
+
+<style>
+#wave-wrap{
+  position: relative;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  border: 1px solid #adcbfe;
+  overflow: hidden;
+}
+
+.wave {
+  position: absolute;
+  width: 250px;
+  height: 300px;
+  border-top-right-radius: 200px;
+  border-top-left-radius: 150px;
+  border-bottom-right-radius: 180px;
+  border-bottom-left-radius: 200px;
+  background: #adcbfe;
+}
+
+#wave1 {
+  top: 120px;
+  left: -50px;
+  animation: waveA 4s linear infinite;
+}
+
+#wave2 {
+  top: 130px;
+  right: -50px;
+  animation: waveB 6s linear infinite;
+}
+
+@keyframes waveA {
+    0% {transform: rotate(0deg);}
+    100% {transform: rotate(360deg);}
+}
+
+@keyframes waveB {
+    0% {transform: rotate(0deg);}
+    100% {transform: rotate(360deg);}
+}
+</style>
+
+<div id="wave-wrap">
+  <div class="wave" id="wave1"></div>
+  <div class="wave" id="wave2"></div>
+</div>
+
+</body>
+</html>
