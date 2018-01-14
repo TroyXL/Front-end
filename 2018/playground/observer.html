@@ -27,11 +27,9 @@ for (let k in data) {
     enumerable: true,
     configurable: true,
     get: function () {
-      console.log('getter')
       return val
     },
     set: function (newVal) {
-      console.log('setter', newVal)
       if (val !== newVal) val = newVal
     }
   })
