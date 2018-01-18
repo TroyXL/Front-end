@@ -1,0 +1,128 @@
+<!DOCTYPE>
+<html lang="zh-CN">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+  <title>Online View PDF</title>
+</head>
+
+<style>
+* {
+  padding: 0;
+  margin: 0;
+}
+#pdf-reader {
+  width: 100%;
+  overflow: scroll;
+}
+.btn {
+  position: fixed;
+  z-index: 999;
+  bottom: 20px;
+}
+#prev {left: 20px;}
+#next {left: 90px;}
+#zoom-big {right: 20px;}
+#zoom-small {right: 70px;}
+</style>
+
+<body>
+<div id="pdf-reader">
+  <canvas id="canvas"></canvas>
+</div>
+
+<a class="btn" id="prev" href="javascript:;">上一页</a>
+<a class="btn" id="next" href="javascript:;">下一页</a>
+<a class="btn" id="zoom-big" href="javascript:;">放大</a>
+<a class="btn" id="zoom-small" href="javascript:;">缩小</a>
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="./pdf.lib.js"></script>
+<script src="./pdf.js"></script>
+<script>
+
+
+var init = true
+var pageNumber = 1
+var totalPage = 0
+var scale = 1
+var zoom = false
+var zoomStep = 0.2
+var pdf;
+var containerWidth = $('#pdf-reader').width()
+
+var canvas = document.getElementById('canvas')
+var ctx = canvas.getContext('2d')
+canvas.width = containerWidth
+
+PDFJS.getDocument('test.pdf').then(function(data) {
+  pdf = data
+  totalPage = pdf.numPages
+  renderPage()
+  initBtn()
+});
+
+function initBtn () {
+  $('#prev').click(function() {
+    if (pageNumber > 1) {
+      pageNumber--
+      zoom = false
+      renderPage()
+    }
+  })
+  $('#next').click(function() {
+    if (pageNumber < totalPage) {
+      pageNumber++
+      zoom = false
+      renderPage()
+    }
+  })
+
+  $('#zoom-big').click(function() {
+    scale += zoomStep
+    zoom = true
+    renderPage()
+  })
+  $('#zoom-small').click(function() {
+    if (canvas.width > containerWidth) {
+      scale -= zoomStep
+      zoom = true
+      renderPage()
+    }
+  })
+}
+
+function renderPage () {
+  pdf.getPage(pageNumber).then(function (page) {
+    
+    var viewport = page.getViewport(init ? 1 : zoom ? scale : 1)
+
+    if (!zoom) {
+      resetScale(viewport)
+      viewport = page.getViewport(scale)
+    }
+
+    console.log(scale)
+    canvas.width = viewport.width
+    canvas.height = viewport.height
+    if (init) {
+      init = false
+      $('#pdf-reader').height(viewport.height)
+    }
+
+    var renderContext = {
+      canvasContext: ctx,
+      viewport: viewport
+    }
+
+    page.render(renderContext)
+  })
+}
+
+function resetScale (viewport) {
+  scale = containerWidth / viewport.width
+}
+
+
+</script>
+</body>
+</html>
