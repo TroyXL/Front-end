@@ -10,117 +10,157 @@
   padding: 0;
   margin: 0;
 }
+#pdf-box {position: relative;}
 #pdf-reader {
   width: 100%;
   overflow: scroll;
 }
+.pdf-btn {
+  position: absolute;
+  display: block;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+}
+#prev {
+  left: 0;
+  background: #deafcb;
+  opacity: .2;
+}
+#next {
+  right: 0;
+  background: #adefcb;
+  opacity: .2;
+}
+
+
 .btn {
   position: fixed;
   z-index: 999;
   bottom: 20px;
 }
-#prev {left: 20px;}
-#next {left: 90px;}
 #zoom-big {right: 20px;}
 #zoom-small {right: 70px;}
 </style>
 
 <body>
-<div id="pdf-reader">
-  <canvas id="canvas"></canvas>
+
+<div id="pdf-box">
+  <div id="pdf-reader"></div>
+
+  <div class="pdf-btn" id="prev"></div>
+  <div class="pdf-btn" id="next"></div>
 </div>
 
-<a class="btn" id="prev" href="javascript:;">上一页</a>
-<a class="btn" id="next" href="javascript:;">下一页</a>
 <a class="btn" id="zoom-big" href="javascript:;">放大</a>
 <a class="btn" id="zoom-small" href="javascript:;">缩小</a>
 
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-<script src="./pdf.lib.js"></script>
 <script src="./pdf.js"></script>
+<script src="./pdfReader.js"></script>
 <script>
 
+new PdfReader({
+  container: '#pdf-reader',
+  src: './test.pdf',
+  mode: 'widthFix',
+  resize: true,
+  zoomStep: 0.1,
+  nextBtn: '#next',
+  prevBtn: '#prev',
+  zoomBigBtn: '#zoom-big',
+  zoomSmallBtn: '#zoom-small',
+  stateChanged: function (state) {
+    console.log(state)
+  },
+  pageChanged: function (current, prev) {
+    console.log(current, prev)
+  },
+  zoomChanged: function (inZoom, zoom) {
+    console.log(inZoom, zoom)
+  }
+})
 
-var init = true
-var pageNumber = 1
-var totalPage = 0
-var scale = 1
-var zoom = false
-var zoomStep = 0.2
-var pdf;
-var containerWidth = $('#pdf-reader').width()
+// var init = true
+// var pageNumber = 1
+// var totalPage = 0
+// var scale = 1
+// var zoom = false
+// var zoomStep = 0.2
+// var pdf;
+// var containerWidth = $('#pdf-reader').width()
 
-var canvas = document.getElementById('canvas')
-var ctx = canvas.getContext('2d')
-canvas.width = containerWidth
+// var canvas = document.getElementById('canvas')
+// var ctx = canvas.getContext('2d')
+// canvas.width = containerWidth
 
-PDFJS.getDocument('test.pdf').then(function(data) {
-  pdf = data
-  totalPage = pdf.numPages
-  renderPage()
-  initBtn()
-});
+// PDFJS.getDocument('test.pdf').then(function(data) {
+//   pdf = data
+//   totalPage = pdf.numPages
+//   renderPage()
+//   initBtn()
+// });
 
-function initBtn () {
-  $('#prev').click(function() {
-    if (pageNumber > 1) {
-      pageNumber--
-      zoom = false
-      renderPage()
-    }
-  })
-  $('#next').click(function() {
-    if (pageNumber < totalPage) {
-      pageNumber++
-      zoom = false
-      renderPage()
-    }
-  })
+// function initBtn () {
+//   $('#prev').click(function() {
+//     if (pageNumber > 1) {
+//       pageNumber--
+//       zoom = false
+//       renderPage()
+//     }
+//   })
+//   $('#next').click(function() {
+//     if (pageNumber < totalPage) {
+//       pageNumber++
+//       zoom = false
+//       renderPage()
+//     }
+//   })
 
-  $('#zoom-big').click(function() {
-    scale += zoomStep
-    zoom = true
-    renderPage()
-  })
-  $('#zoom-small').click(function() {
-    if (canvas.width > containerWidth) {
-      scale -= zoomStep
-      zoom = true
-      renderPage()
-    }
-  })
-}
+//   $('#zoom-big').click(function() {
+//     scale += zoomStep
+//     zoom = true
+//     renderPage()
+//   })
+//   $('#zoom-small').click(function() {
+//     if (canvas.width > containerWidth) {
+//       scale -= zoomStep
+//       zoom = true
+//       renderPage()
+//     }
+//   })
+// }
 
-function renderPage () {
-  pdf.getPage(pageNumber).then(function (page) {
+// function renderPage () {
+//   pdf.getPage(pageNumber).then(function (page) {
     
-    var viewport = page.getViewport(init ? 1 : zoom ? scale : 1)
+//     var viewport = page.getViewport(init ? 1 : zoom ? scale : 1)
 
-    if (!zoom) {
-      resetScale(viewport)
-      viewport = page.getViewport(scale)
-    }
+//     if (!zoom) {
+//       resetScale(viewport)
+//       viewport = page.getViewport(scale)
+//     }
 
-    console.log(scale)
-    canvas.width = viewport.width
-    canvas.height = viewport.height
-    if (init) {
-      init = false
-      $('#pdf-reader').height(viewport.height)
-    }
+//     console.log(scale)
+//     canvas.width = viewport.width
+//     canvas.height = viewport.height
+//     if (init) {
+//       init = false
+//       $('#pdf-reader').height(viewport.height)
+//     }
 
-    var renderContext = {
-      canvasContext: ctx,
-      viewport: viewport
-    }
+//     var renderContext = {
+//       canvasContext: ctx,
+//       viewport: viewport
+//     }
 
-    page.render(renderContext)
-  })
-}
+//     page.render(renderContext)
+//   })
+// }
 
-function resetScale (viewport) {
-  scale = containerWidth / viewport.width
-}
+// function resetScale (viewport) {
+//   scale = containerWidth / viewport.width
+// }
 
 
 </script>
