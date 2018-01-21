@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+    <title>imagesLayout</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+</head>
+<body>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+#vertical-waterfull {
+  width: 900px;
+}
+
+#vertical-waterfull:before, #vertical-waterfull:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.image-box {
+  float: left;
+  padding: 1px;
+  overflow: hidden;
+}
+</style>
+
+<div id="vertical-waterfull"></div>
+
+<script src="./imagesLayout.js"></script>
+<script>
+const images = [{
+  src: 'https://static.cxstore.top/images/lake.jpg',
+  width: 4000,
+  height: 6000
+}, {
+  src: 'https://static.cxstore.top/images/japan.jpg',
+  width: 1500,
+  height: 1125
+}, {
+  src: 'https://static.cxstore.top/images/girl.jpg',
+  width: 5616,
+  height: 3266
+}, {
+  src: 'https://static.cxstore.top/images/flower.jpg',
+  width: 4864,
+  height: 3648
+}, {
+  src: 'https://static.cxstore.top/images/lake.jpg',
+  width: 4000,
+  height: 6000
+}, {
+  src: 'https://static.cxstore.top/images/japan.jpg',
+  width: 1500,
+  height: 1125
+}, {
+  src: 'https://static.cxstore.top/images/grass.jpg',
+  width: 5184,
+  height: 2916
+}, {
+  src: 'https://static.cxstore.top/images/girl.jpg',
+  width: 5616,
+  height: 3266
+}, {
+  src: 'https://static.cxstore.top/images/flower.jpg',
+  width: 4864,
+  height: 3648
+}, {
+  src: 'https://static.cxstore.top/images/girl.jpg',
+  width: 5616,
+  height: 3266
+}, {
+  src: 'https://static.cxstore.top/images/flower.jpg',
+  width: 4864,
+  height: 3648
+}, {
+  src: 'https://static.cxstore.top/images/girl.jpg',
+  width: 5616,
+  height: 3266
+}, {
+  src: 'https://static.cxstore.top/images/flower.jpg',
+  width: 4864,
+  height: 3648
+}, {
+  src: 'https://static.cxstore.top/images/lake.jpg',
+  width: 4000,
+  height: 6000
+}, {
+  src: 'https://static.cxstore.top/images/japan.jpg',
+  width: 1500,
+  height: 1125
+}, {
+  src: 'https://static.cxstore.top/images/grass.jpg',
+  width: 5184,
+  height: 2916
+}, {
+  src: 'https://static.cxstore.top/images/girl.jpg',
+  width: 5616,
+  height: 3266
+}, {
+  src: 'https://static.cxstore.top/images/flower.jpg',
+  width: 4864,
+  height: 3648
+}, {
+  src: 'https://static.cxstore.top/images/lake.jpg',
+  width: 4000,
+  height: 6000
+}, {
+  src: 'https://static.cxstore.top/images/grass.jpg',
+  width: 5184,
+  height: 2916
+}, {
+  src: 'https://static.cxstore.top/images/japan.jpg',
+  width: 1500,
+  height: 1125
+}, {
+  src: 'https://static.cxstore.top/images/grass.jpg',
+  width: 5184,
+  height: 2916
+}, {
+  src: 'https://static.cxstore.top/images/girl.jpg',
+  width: 5616,
+  height: 3266
+}, {
+  src: 'https://static.cxstore.top/images/lake.jpg',
+  width: 4000,
+  height: 6000
+}, {
+  src: 'https://static.cxstore.top/images/japan.jpg',
+  width: 1500,
+  height: 1125
+}, {
+  src: 'https://static.cxstore.top/images/grass.jpg',
+  width: 5184,
+  height: 2916
+}, {
+  src: 'https://static.cxstore.top/images/flower.jpg',
+  width: 4864,
+  height: 3648
+}, {
+  src: 'https://static.cxstore.top/images/lake.jpg',
+  width: 4000,
+  height: 6000
+}, {
+  src: 'https://static.cxstore.top/images/japan.jpg',
+  width: 1500,
+  height: 1125
+}, {
+  src: 'https://static.cxstore.top/images/grass.jpg',
+  width: 5184,
+  height: 2916
+}]
+
+const $box = document.getElementById('vertical-waterfull')
+
+const layout = new ImagesLayout(images, $box.clientWidth, 5)
+
+
+
+layout.completedImages.forEach(item => {
+  let $imageBox = document.createElement('div')
+  $imageBox.setAttribute('class', 'image-box')
+  $imageBox.style.width = item.width + 'px'
+  $imageBox.style.height = item.height + 'px'
+  let $image = document.createElement('img')
+  $image.setAttribute('src', item.src)
+  $imageBox.appendChild($image)
+  $box.appendChild($imageBox)
+})
+
+</script>
+</body>
+</html>

@@ -1,5 +1,12 @@
+/*
+ * 图片横向瀑布流布局 最大限度保证每张图片完整显示
+ * 需要先提供每张图片的宽高 仅返回最后计算出来的图片宽高
+ * 尽量保证图片总数能被单行显示的数量整除 避免最后一行单张显示 否则会影响美观
+ * 每张图由于宽高取整返回的宽高存在0-2px的误差，可以通过 css 保证视觉效果
+ */
+
 class ImagesLayout {
-  constructor(images, limit = 0, containerWidth, numberInLine = 2, stdRatio = 1.5) {
+  constructor(images, containerWidth, numberInLine = 10, limit = 0, stdRatio = 1.5) {
     // 图片列表
     this.images = images
     // 布局完毕的图片列表
@@ -8,12 +15,12 @@ class ImagesLayout {
     this.containerWidth = containerWidth
     // 单行显示的图片数量
     this.numberInLine = numberInLine
-    // 限制布局的数量
+    // 限制布局的数量 如果传入的图片列表有100张 但只需要对前20张进行布局 后面的图片忽略 则可以使用此参数限制 如果不传则默认0（不限制）
     this.limit = limit
-    // 图片标准宽高比
+    // 图片标准宽高比（当最后一行只剩一张图片时 为了不让布局看上去很奇怪 所以要有一个标准宽高比 当图片实际宽高比大于标准宽高比时会发生截取 小于时按照实际高度占满整行显示）
     this.stdRatio = stdRatio
     // 图片标准高度
-    this.stdHeight = parseInt(this.containerWidth / this.stdRatio)
+    this.stdHeight = this.containerWidth / this.stdRatio
 
     this.chunkAndLayout()
   }
@@ -57,7 +64,7 @@ class ImagesLayout {
     image.width = this.containerWidth
     // 如果是长图，则布局时按照标准宽高比显示中间部分
     if (ratio < this.stdRatio) {
-      image.height = this.stdHeight
+      image.height = parseInt(this.stdHeight)
     } else {
       image.height = parseInt(this.containerWidth / ratio)
     }
@@ -73,7 +80,7 @@ class ImagesLayout {
       // 计算每张图的宽高比
       let ratio = item.width / item.height
       // 根据标准高度计算相对图宽
-      let relateWidth = parseInt(this.stdHeight * ratio)
+      let relateWidth = this.stdHeight * ratio
       widths.push(relateWidth)
       ratios.push(ratio)
     })
@@ -98,5 +105,3 @@ class ImagesLayout {
     })
   }
 }
-
-module.exports = ImagesLayout
