@@ -1,16 +1,8 @@
-
-// container
-// src
-// mode|string|widthFix|heightFix
-// resize|boolean
-// zoomStep|float(0,1)
-// nextBtn prevBtn
-// zoomBigBtn zoomSmallBtn
-// stateChanged|func
-// pageChanged|func
-
 /*
- * 基于pdf.js的h5端pdf简易阅读工具
+ * 基于pdf.js(with pdf.worker.js)的h5端pdf简易阅读工具
+ *
+ * @author xuliang l.xu2@htd.cn
+ * @date 2018-1-19
  *
  * @param opts {Object} pdfReader配置参数，包括以下属性
  *
@@ -32,14 +24,24 @@
 /*
  * 可使用的属性说明，未列出的属性不建议使用
  *
- * @property state {Int} 阅读器当前状态
+ * @property state {Integer} 阅读器当前状态
  * @property canvas {NodeElement} 当前显示的页面的canvas节点，可以通过这个节点将当前页面导出为图片
  * @property ctx {Object} canvas的2d绘制上下文对象
- * @property currentPage {Int} 当前页码
- * @property totalPage {Int} 总页码
+ * @property currentPage {Integer} 当前页码
+ * @property totalPage {Integer} 总页码
  * @property container {NodeElement} 显示pdf的页面节点
  * @property inZoom {Boolean} 当前页面是否处于缩放状态
  * @property zoom {Float} 当前页面的缩放比例，最小为1
+ *
+ */
+
+/*
+ * 可使用的方法，未列出的方法不建议使用
+ *
+ * @method turnToPage 跳转到某一页
+ * @param page {Integer} 页码
+ * @return success {Boolean} 是否跳转成功
+ *
  */
 
 function PdfReader (opts) {
@@ -151,7 +153,7 @@ PdfReader.prototype = {
   },
 
   showPage: function (page, lastCanvas) {
-    // 获取当前单页试图缩放后的尺寸
+    // 获取当前单页视图缩放后的尺寸
     // 初始化及缩放后切换页面时获取单页原始尺寸
     var viewport = page.getViewport(!this.initialized ? 1 : this.inZoom ? this.scale : 1);
     // 如果没有缩放，重新调整缩放比例保证完全显示
@@ -168,7 +170,7 @@ PdfReader.prototype = {
     });
   },
 
-  // 在未缩放时，根据 page 试图的尺寸调整 container 的尺寸
+  // 在未缩放且 resize = true 时，根据 page 视图的尺寸调整 container 的尺寸
   resizeContainerWithoutZoom: function (view) {
     // 当 resize = true 时
     // 当 resize = false 但是是初始化时
@@ -179,7 +181,7 @@ PdfReader.prototype = {
     }
   },
 
-  // 根据 page 试图的切换与缩放调整 canvas 的显示尺寸
+  // 根据 page 视图的切换与缩放调整 canvas 的显示尺寸
   resizeCanvas: function (view) {
     this.canvas.width = view.width
     this.canvas.height = view.height
@@ -194,6 +196,25 @@ PdfReader.prototype = {
     }
   },
 
+  turnToPage: function (page) {
+    if (this.state < 2) {
+      console.warn('pdf 加载中，请稍后再尝试页码跳转');
+      return false;
+    }
+
+    if (page < 1 || page > this.totalPage || typeof page !== 'number') {
+      console.warn('当前页码不存在');
+      return false;
+    }
+
+    var prev = this.currentPage;
+    this.currentPage = page;
+    this.inZoom = false;
+    this.renderPage();
+    this.pageChanged && this.pageChanged(this.currentPage, prev, this.totalPage);
+    return true;
+  },
+
   // 翻页
   pageChange: function () {
     var self = this;
@@ -201,24 +222,14 @@ PdfReader.prototype = {
       self.prevBtn.addEventListener('click', function (e) {
         e.preventDefault();
         if (self.state !== 3) return;
-        if (self.currentPage > 1) {
-          self.currentPage--;
-          self.inZoom = false;
-          self.renderPage();
-          self.pageChanged && self.pageChanged(self.currentPage, self.currentPage + 1, self.totalPage);
-        }
+        self.turnToPage(self.currentPage - 1)
       });
     }
     if (self.nextBtn) {
       self.nextBtn.addEventListener('click', function (e) {
         e.preventDefault();
         if (self.state !== 3) return;
-        if (self.currentPage < self.totalPage) {
-          self.currentPage++;
-          self.inZoom = false;
-          self.renderPage();
-          self.pageChanged && self.pageChanged(self.currentPage, self.currentPage - 1, self.totalPage);
-        }
+        self.turnToPage(self.currentPage + 1)
       });
     }
   },
