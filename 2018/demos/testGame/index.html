@@ -22,14 +22,38 @@
 
 <script src='./pixi.js'></script>
 <script>
+const Application = PIXI.Application,
+      loader = PIXI.loader,
+      resources = PIXI.loader.resources,
+      Sprite = PIXI.Sprite
 
-const app = new PIXI.Application({
+const app = new Application({
   width: document.documentElement.clientWidth,
   height: document.documentElement.clientHeight
 })
-console.log(app)
 
 document.body.appendChild(app.view)
+
+loader
+  .add('hero', 'bundle/hero.png')
+  .load(setup);
+
+function setup() {
+  let hero = new PIXI.Sprite(
+    resources.hero.texture
+  );
+  // hero.width = hero.width / 2
+  // hero.height = hero.height / 2
+  // hero.x = hero.y = 100
+  hero.scale.set(0.5, 0.5)
+  // hero.rotation = .5
+  app.stage.addChild(hero)
+
+  app.ticker.add(delta => {
+    hero.x = hero.y += 1 + delta
+  })
+}
+
 
 
 
