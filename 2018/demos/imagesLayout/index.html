@@ -18,11 +18,11 @@
   box-sizing: border-box;
 }
 
-#vertical-waterfull {
+#horizontal-waterfull {
   width: 300px;
 }
 
-#vertical-waterfull:before, #vertical-waterfull:after {
+#horizontal-waterfull:before, #horizontal-waterfull:after {
   content: '';
   display: table;
   clear: both;
@@ -39,7 +39,7 @@ img {
 }
 </style>
 
-<div id="vertical-waterfull"></div>
+<div id="horizontal-waterfull"></div>
 
 <script src="./imagesLayout.js"></script>
 <script>
@@ -165,7 +165,7 @@ const images = [{
   height: 2916
 }]
 
-const $box = document.getElementById('vertical-waterfull')
+const $box = document.getElementById('horizontal-waterfull')
 
 const layout = new ImagesLayout(images, $box.clientWidth, 2)
 
