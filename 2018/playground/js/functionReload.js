@@ -11,4 +11,8 @@
       console.log('logic d with arguments arg1 & arg2 & arg3', arg1, arg2, arg3)
     }
   }
+
+  function reloadByClosure () {
+    
+  }
 }())
