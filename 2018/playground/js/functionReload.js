@@ -83,4 +83,15 @@
   console.log(group.find(0))
   console.log(group.find(1, 30))
   console.log(group.find(0, 40))
+
+  function addMethodToObject (obj, name, fn) {
+    const temp = obj[name]
+    obj[name] = () => {
+      if (fn.length === arguments.length) {
+        return fn.apply(obj, arguments)
+      } else if (typeof temp === 'function') {
+        return temp.apply(obj, arguments)
+      }
+    }
+  }
 }())
