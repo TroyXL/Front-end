@@ -94,4 +94,43 @@
       }
     }
   }
+
+  addMethodToObject(group, 'find', () => {
+    return {
+      peoples: this.peoples,
+      count: this.peoples.length
+    }
+  })
+
+  addMethodToObject(group, 'find', (isMale) => {
+    if (!!isMale) {
+      const male = this.peoples.filter(item => item.sex === 'male')
+      return {
+        peoples: male,
+        count: male.length
+      }
+    } else {
+      const female = this.peoples.filter(item => item.sex === 'female')
+      return {
+        peoples: female,
+        count: female.length
+      }
+    }
+  })
+
+  addMethodToObject(group, 'find', (elder, age) => {
+    if (!!elder) {
+      const elder = this.peoples.filter(item => item.age >= age)
+      return {
+        peoples: elder,
+        count: elder.length
+      }
+    } else {
+      const younger = this.peoples.filter(item => item.age < age)
+      return {
+        peoples: younger,
+        count: younger.length
+      }
+    }
+  })
 }())
