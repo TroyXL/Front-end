@@ -1,5 +1,5 @@
 (function () {
-  // const ns = new Namespace('ns')
+  // const ns = new Namespace()
 
   // ns.add('com', {}) // ns.com = {}
   // ns.add('cn') = {} // ns.cn = {}
@@ -18,7 +18,7 @@
 
   class Namespace {
     constructor (root) {
-
+      this.ns = {}
     }
   }
 }())
