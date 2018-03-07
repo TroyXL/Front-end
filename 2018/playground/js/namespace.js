@@ -20,5 +20,23 @@
     constructor (root) {
       this.ns = {}
     }
+
+    // all () {
+    //   return this.ns
+    // }
+
+    add (domainName, value) {
+      const domainNames = domainName.split(',')
+
+    }
+
+    find (domainName) {
+
+    }
+
+    _walk (domainName, currentDomain) {
+      
+    }
+
   }
 }())
