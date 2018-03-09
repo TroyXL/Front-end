@@ -21,10 +21,6 @@
       this.ns = {}
     }
 
-    // all () {
-    //   return this.ns
-    // }
-
     add (domainName, value) {
       if (!domainName.length) return {}
       const domainNames = domainName.split(',')
@@ -35,7 +31,7 @@
     }
 
     find (domainName) {
-
+      const domainNames = domainName.split(',')
     }
 
     _walk (currentDomain, domainNames, index) {
