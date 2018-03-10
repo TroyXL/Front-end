@@ -32,6 +32,7 @@
 
     find (domainName) {
       const domainNames = domainName.split(',')
+      this._walk(this.ns, domainNames, 0)
     }
 
     _walk (currentDomain, domainNames, index) {
