@@ -20,7 +20,20 @@
 <!-- <script src="./js/observer.js"></script> -->
 <!-- <script src="./js/argument.js"></script> -->
 <!-- <script src="./js/symbol.js"></script> -->
-<script src="./js/functionReload.js"></script>
+<script src="./js/functionOverride.js"></script>
+
+<script>
+let a = 1
+
+a++
+
+console.log(a)
+
+window.onpageshow = e => {
+  console.log(e.persisted)
+}
+</script>
+
 
 </body>
 </html>
