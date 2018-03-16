@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+    <title>课堂点名系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <style>
+      h1 {
+        position: fixed;
+        width: 100%;
+        height: 100px;
+        top: 50%;
+        margin-top: -50px;
+        font-size: 80px;
+        line-height: 100px;
+        text-align: center;
+      }
+    </style>
+</head>
+<body>
+<h1 id="student-name">按下回车或空格键开始或暂停</h1>
+</body>
+
+<script>
+(function () {
+  var students = [
+    '学生1',
+    '学生2',
+    '学生3',
+    '学生4',
+    '学生5',
+    '学生6',
+    '学生7',
+    '学生8',
+    '学生9',
+    '学生10',
+    '学生11',
+    '学生12',
+    '学生13',
+    '学生14',
+    '学生15'
+  ]
+
+  var $student = document.getElementById('student-name')
+  var inDraw = false
+  var currentStudent = 0
+  var interval
+
+  window.onkeyup = function (e) {
+    e.preventDefault
+    var code = e.keyCode
+    if (code === 13 || code === 32) doDraw()
+  }
+
+  function doDraw () {
+    if (!inDraw) {
+      interval = setInterval(function () {
+        if (currentStudent < students.length - 1) currentStudent++
+        else currentStudent = 0
+        showStudent()
+      }, 50)
+    } else {
+      clearInterval(interval)
+    }
+    inDraw = !inDraw
+  }
+
+  function showStudent () {
+    $student.innerText = students[currentStudent]
+  }
+}())
+</script>
+
+</html>
