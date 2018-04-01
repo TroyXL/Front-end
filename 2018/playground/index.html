@@ -12,143 +12,22 @@
   <meta name="keywords" content="" />
 </head>
 <body>
+  
+  <p id="test"></p>
 
-<style>
-    #app {
-      font-family: "Avenir", Helvetica, Arial, sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      text-align: center;
-      color: #2c3e50;
+  <script src="https://cdn.bootcss.com/vue/2.3.4/vue.min.js"></script>
+  <!-- <script src="https://cdn.bootcss.com/lodash.js/4.17.4/lodash.min.js"></script> -->
+  <!-- <script src="https://cdn.bootcss.com/moment.js/2.20.0/moment.min.js"></script> -->
+  <!-- <script src="https://cdn.bootcss.com/moment.js/2.20.1/locale/zh-cn.js"></script> -->
 
-
-
-
-    }
-    .title {
-      margin: 40px;
-      font-size: 30px;
-    }
-    .collection {
-      margin-top: 20px;
-    }
-    .vue-virtual-collection {
-      margin: 0 auto;
-    }
-    .text input {
-      text-align: center;
-      border: 0;
-      width: 75px;
-      border-bottom: 1px solid #e0e0e0;
-    }
-    .card {
-      background: #aaa;
-      width: 100%;
-      height: 100%;
-      color: #fff;
-      line-height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 5px;
-
-    }
-    .card .color0 {
-      background: rgb(244, 67, 54);
-    }
-    .card .color1 {
-      background: rgb(255, 235, 59);
-    }
-    .card .color2 {
-      background: rgb(255, 152, 0);
-    }
-    .card .color3 {
-      background: rgb(33, 150, 243);
-    }
-    .card .color4 {
-      background: rgb(55, 64, 70);
-    }
-    .card .color5 {
-      background: rgb(103, 58, 183);
-    }
-    .card .color6 {
-      background: rgb(63, 81, 181);
-    }
-    .card .color7 {
-      background: rgb(76, 175, 80);
-    }
-</style>
-    <div id="app">
-      <div class="title">Vue Virtual Collection</div>
-      <div class="text">With <input v-model="amount"/> data in <input v-model="line"/> columns</div>
-      <div class="collection">
-        <vue-virtual-collection :cellSizeAndPositionGetter="cellSizeAndPositionGetter" :collection="items" :height="800" :width="width">
-          <!-- <template slot-scope="props">
-            <div slot="cell" class="card" :class="props.data.color">{{props.data.text}}</div>
-          </template> -->
-        </vue-virtual-collection>
-      </div>
-    </div>
-
-    <script src="https://cdn.bootcss.com/vue/2.3.4/vue.min.js"></script>
-    <!-- <script src="https://cdn.bootcss.com/lodash.js/4.17.4/lodash.min.js"></script> -->
-    <!-- <script src="https://cdn.bootcss.com/moment.js/2.20.0/moment.min.js"></script> -->
-    <!-- <script src="https://cdn.bootcss.com/moment.js/2.20.1/locale/zh-cn.js"></script> -->
-
-    <!-- <script src="./js/observer.js"></script> -->
-    <!-- <script src="./js/argument.js"></script> -->
-    <!-- <script src="./js/symbol.js"></script> -->
-    <!-- <script src="./js/functionOverride.js"></script> -->
-    <script src="./js/collect.js"></script>
+  <!-- <script src="./js/observer.js"></script> -->
+  <!-- <script src="./js/argument.js"></script> -->
+  <!-- <script src="./js/symbol.js"></script> -->
+  <!-- <script src="./js/functionOverride.js"></script> -->
+  <script src="./js/eventLoop.js"></script>
 
 <script>
-  Vue.component("vue-virtual-collection", window['vue-virtual-collection'])
-  // Vue.use(window['vue-virtual-collection'])
-  new Vue({
-    el: '#app',
-    data() {
-        return {
-            amount: "100000",
-            line: "30",
-            width: (document.body.clientWidth || document.documentElement.clientWidth) - 20
-        }
-    },
-    computed: {
-        items() {
-            const amount = +this.amount
-            const line = +this.line
-            const columnHeight = new Array(line).fill(0)
-            return new Array(amount).fill(1).map((_, index) => {
-                const column = index % line
-                const height = 50 + 100 * Math.random()
-                const result = {
-                    data: {
-                        text: `#${index}`,
-                        color: this.randomColor()
-                    },
-                    height,
-                    width: 75,
-                    x: column * 85,
-                    y: columnHeight[column]
-                }
-                columnHeight[column] += height + 10
-                return result
-            })
-        }
-    },
-    methods: {
-        cellSizeAndPositionGetter(item, index) {
-            const { data, ...sizeAndPosition } = item
-            return sizeAndPosition
-        },
-        randomColor() {
-            return "color" + parseInt(Math.random() * 8)
-        }
-    },
-    created () {
-      console.log(this.line)
-    }
-  })
+
 </script>
 
 
