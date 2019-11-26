@@ -12,10 +12,7 @@
   <meta name="keywords" content="" />
 </head>
 <body>
-  
-  <p id="test"></p>
-
-  <script src="https://cdn.bootcss.com/vue/2.3.4/vue.min.js"></script>
+  <!-- <script src="https://cdn.bootcss.com/vue/2.3.4/vue.min.js"></script> -->
   <!-- <script src="https://cdn.bootcss.com/lodash.js/4.17.4/lodash.min.js"></script> -->
   <!-- <script src="https://cdn.bootcss.com/moment.js/2.20.0/moment.min.js"></script> -->
   <!-- <script src="https://cdn.bootcss.com/moment.js/2.20.1/locale/zh-cn.js"></script> -->
@@ -24,12 +21,141 @@
   <!-- <script src="./js/argument.js"></script> -->
   <!-- <script src="./js/symbol.js"></script> -->
   <!-- <script src="./js/functionOverride.js"></script> -->
-  <script src="./js/eventLoop.js"></script>
+  <!-- <script src="./js/eventLoop.js"></script> -->
+  <!-- <script src="./js/proxy-vue.js"></script> -->
 
-<script>
+  <button id="button">add count</button>
+  <input type="text" value="0" id="input">
+  <p id="counter">0</p>
 
-</script>
+  <script src="./js/Rx.js"></script>
+
+  <script>
+    const button = document.getElementById('button')
+    const input = document.getElementById('input')
+    const counter = document.getElementById('counter')
+
+    // Rx.Observable.fromEvent(button, 'click')
+    //   .throttleTime(1000)
+    //   .scan(count => count+1, 0)
+    //   .subscribe(count => {
+    //     counter.innerText = count
+    //   })
+
+    // function periodicalUpdate (observer) {
+    //   let count = 0
+    //   setInterval(() => {
+    //     observer.next(++count)
+    //   }, 1000)
+    // }
+
+    // const update = new Rx.Subject()
+    // update.subscribe(c => {
+    //   console.log('1---', c)
+    // })
+    // update.subscribe(c => {
+    //   console.log('2---', c)
+    // })
+    // update.next(1)
+
+    // const observable = Rx.Observable.create(observer => {
+    //   let start = 1
+    //   observer.next(start)
+    //   start += 2
+    //   observer.next(start)
+    //   start += 2
+    //   observer.next(start)
+    //   setTimeout(() => {
+    //     start += 2
+    //     observer.next(start)
+    //     // observer.error(new Error('test'))
+    //     observer.complete()
+    //   }, 2000)
+    // })
+    // observable.subscribe({
+    //   next: s => console.log(s),
+    //   complete: () => console.log('complete'),
+    //   error: error => console.error(error)
+    // })
+
+    // 自定义操作符
+    function add2 (input) {
+      return Rx.Observable.create(observer => {
+        input.subscribe(n => observer.next(n + 2))
+      })
+    }
+
+    // const input = Rx.Observable.from([1,2,3,4])
+    // const output = add2(input)
+    // output.subscribe(n => n)
+
+    // const interval1 = Rx.Observable.interval(1000)
+    // const interval2 = Rx.Observable.interval(400)
+    // const interval = Rx.Observable.merge(interval1, interval2)
+    // interval.subscribe(n => console.log(n))
+
+    const increase = Rx.Observable.fromEvent(button, 'click')
+      // .let(
+        // mapOperator(
+        //   increase,
+        //   () => state => Object.assign({}, state, { count: state.count + 1 })
+        // ),
+        // scanOperator(
+        //   increase,
+        //   (state, changeFunc) => changeFunc(state),
+        //   { count: 0}
+        // )
+        // map(
+        //   () => state => Object.assign({}, state, { count: state.count + 1 })
+        // ),
+        // scan(
+        //   (state, changeFunc) => changeFunc(state),
+        //   { count: 0}
+        // )
+      // )
+      .map(
+        () => state => Object.assign({}, state, { count: state.count + 1 })
+      ).scan(
+        (state, changeFunc) => changeFunc(state),
+        { count: 0}
+      )
+    
+    function mapOperator (input, func) {
+      return Rx.Observable.create(observer => {
+        input.subscribe(v => (
+          observer.next(func())
+        ))
+      })
+    }
+
+    function scanOperator (input, func, origin) {
+      return Rx.Observable.create(observer => {
+        let total = origin
+        input.subscribe(v => {
+          total = func(total, v)
+          observer.next(total)
+        })
+      })
+    }
+
+    const mapedIncrease = mapOperator(
+      increase,
+      () => state => Object.assign({}, state, { count: state.count + 1 })
+    )
+    const scanedIncrease = scanOperator(
+      mapedIncrease,
+      (state, changeFunc) => changeFunc(state),
+      { count: 0}
+    )
+
+    increase.subscribe(state => {
+      console.log(state)
+      counter.innerText = state.count
+      input.value = state.count
+    })
+
+  </script>
 
 
-  </body>
-  </html>
+</body>
+</html>
